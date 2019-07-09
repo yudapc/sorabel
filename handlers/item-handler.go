@@ -18,3 +18,14 @@ func GetItems(db *sql.DB) echo.HandlerFunc {
 		})
 	}
 }
+
+func GetItemDetail(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		data := models.GetItemDetail(id, db)
+		return c.JSON(http.StatusOK, libraries.H{
+			"code": http.StatusOK,
+			"data": data,
+		})
+	}
+}
