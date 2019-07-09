@@ -1,0 +1,8 @@
+package: sorabel
+import:
+- package: github.com/labstack/echo
+  version: ~3.1
+- package: github.com/labstack/gommon
+  version: v0.2.9
+  subpackages:
+  - color
