@@ -1,8 +1,10 @@
 package: sorabel
 import:
-- package: github.com/labstack/echo
-  version: ~3.1
-- package: github.com/labstack/gommon
-  version: v0.2.9
-  subpackages:
-  - color
+  - package: github.com/labstack/echo
+    version: ~3.1
+  - package: github.com/labstack/gommon
+    version: v0.2.9
+    subpackages:
+      - color
+  - package: github.com/mattn/go-sqlite3
+    version: v1.10.0
