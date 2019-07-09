@@ -15,6 +15,8 @@ func main() {
 	e.GET("/", handlers.Home())
 	e.GET("/items", handlers.GetItems(db))
 	e.GET("/items/:id", handlers.GetItemDetail(db))
+	e.POST("/items", handlers.CreateItem(db))
+	e.PUT("/items/:id", handlers.UpdateItem(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
