@@ -54,7 +54,6 @@ func GetItemDetail(id string, db *sql.DB) Item {
 
 func CreateItem(db *sql.DB, sku string, name string, stock int) (int64, error) {
 	sql := "INSERT INTO items(sku, name, stock) VALUES(?,?,?)"
-
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		panic(err)
@@ -70,16 +69,29 @@ func CreateItem(db *sql.DB, sku string, name string, stock int) (int64, error) {
 }
 
 func EditItem(db *sql.DB, id int, sku string, name string, stock int) (int64, error) {
-	sql := "UPDATE items set sku = ?, name = ?, stock = ? WHERE id = ?"
-
+	sql := "UPDATE items set sku = ?,	 name = ?, stock = ? WHERE id = ?"
 	stmt, err := db.Prepare(sql)
-
 	if err != nil {
 		panic(err)
 	}
 
 	result, err2 := stmt.Exec(sku, name, stock, id)
 
+	if err2 != nil {
+		panic(err2)
+	}
+
+	return result.RowsAffected()
+}
+
+func DeleteItem(db *sql.DB, id int) (int64, error) {
+	sql := "DELETE FROM items WHERE id = ?"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		panic(err)
+	}
+
+	result, err2 := stmt.Exec(id)
 	if err2 != nil {
 		panic(err2)
 	}
