@@ -1,5 +1,5 @@
-hash: ee1442cfb01728c03a9502434118d3012647290704a9a0780ea552270864e8e1
-updated: 2019-07-09T16:22:49.206784+07:00
+hash: 65fb086d0d44ac564133b50ddb90878b7a82f0c4c50ac1ba241037e3c61c9282
+updated: 2019-07-09T16:26:12.872844+07:00
 imports:
 - name: github.com/labstack/echo
   version: 4256489c0e1ff50bdb71aedd1a21483fe2d67607
@@ -12,6 +12,8 @@ imports:
   version: 5411d3eea5978e6cdc258b30de592b60df6aba96
 - name: github.com/mattn/go-isatty
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
+- name: github.com/mattn/go-sqlite3
+  version: c7c4067b79cc51e6dfdcef5c702e74b1e0fa7c75
 - name: github.com/valyala/bytebufferpool
   version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
 - name: github.com/valyala/fasttemplate
