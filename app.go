@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"net/http"
+	"sorabel/handlers"
 
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
@@ -13,6 +14,7 @@ func main() {
 	db := initDB("storage.db")
 	migrate(db)
 	e.GET("/", HelloWorld())
+	e.GET("/items", handlers.GetItems(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
