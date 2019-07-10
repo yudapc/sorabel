@@ -7,13 +7,13 @@ import (
 )
 
 type Purchase struct {
-	ID            uint       `gorm:"primary_key" json:"id"`
-	CreatedAt     time.Time  `json:"created_at"`
-	UpdatedAt     time.Time  `json:"updated_at"`
-	DeletedAt     *time.Time `json:"deleted_at"`
-	DateTime      string     `json:"date_time" validate:"required"`
-	ReceiptNumber string     `json:"receipt_number" validate:"required"`
-	// PurchaseDetail []PurchaseDetail `json:"purchase_details"`
+	ID              uint             `gorm:"primary_key" json:"id"`
+	CreatedAt       time.Time        `json:"created_at"`
+	UpdatedAt       time.Time        `json:"updated_at"`
+	DeletedAt       *time.Time       `json:"deleted_at"`
+	DateTime        string           `json:"date_time" validate:"required"`
+	ReceiptNumber   string           `json:"receipt_number" validate:"required"`
+	PurchaseDetails []PurchaseDetail `json:"purchase_details"`
 }
 
 type PurchaseDetail struct {
