@@ -1,4 +1,4 @@
-package purchasemodel
+package model
 
 import (
 	"time"

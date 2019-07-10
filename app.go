@@ -1,11 +1,11 @@
 package main
 
 import (
-	homehandler "sorabel/src/home/handler"
-	itemhandler "sorabel/src/item/handler"
-	itemmodel "sorabel/src/item/model"
-	purchasehandler "sorabel/src/purchase/handler"
-	purchasemodel "sorabel/src/purchase/model"
+	HomeHandler "sorabel/src/home/handler"
+	ItemHandler "sorabel/src/item/handler"
+	ItemModel "sorabel/src/item/model"
+	PurchaseHandler "sorabel/src/purchase/handler"
+	PurchaseModel "sorabel/src/purchase/model"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -33,24 +33,24 @@ func main() {
 
 	migrate(db)
 
-	e.GET("/", homehandler.Home())
-	e.GET("/items", itemhandler.GetItems(db))
-	e.GET("/items/:id", itemhandler.GetItemDetail(db))
-	e.POST("/items", itemhandler.CreateItem(db))
-	e.PUT("/items/:id", itemhandler.UpdateItem(db))
-	e.DELETE("/items/:id", itemhandler.DeleteItem(db))
-	e.GET("/purchases", purchasehandler.GetPurchases(db))
-	e.GET("/purchases/:id", purchasehandler.GetPurchaseDetail(db))
-	e.POST("/purchases", purchasehandler.CreatePurchase(db))
-	e.PUT("/purchases/:id", purchasehandler.UpdatePurchase(db))
-	e.DELETE("/purchases/:id", purchasehandler.DeletePurchase(db))
+	e.GET("/", HomeHandler.Home())
+	e.GET("/items", ItemHandler.GetItems(db))
+	e.GET("/items/:id", ItemHandler.GetItemDetail(db))
+	e.POST("/items", ItemHandler.CreateItem(db))
+	e.PUT("/items/:id", ItemHandler.UpdateItem(db))
+	e.DELETE("/items/:id", ItemHandler.DeleteItem(db))
+	e.GET("/purchases", PurchaseHandler.GetPurchases(db))
+	e.GET("/purchases/:id", PurchaseHandler.GetPurchaseDetail(db))
+	e.POST("/purchases", PurchaseHandler.CreatePurchase(db))
+	e.PUT("/purchases/:id", PurchaseHandler.UpdatePurchase(db))
+	e.DELETE("/purchases/:id", PurchaseHandler.DeletePurchase(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
 func migrate(db *gorm.DB) {
 	db.AutoMigrate(
-		&itemmodel.Item{},
-		&purchasemodel.Purchase{},
-		&purchasemodel.PurchaseDetail{},
+		&ItemModel.Item{},
+		&PurchaseModel.Purchase{},
+		&PurchaseModel.PurchaseDetail{},
 	)
 }

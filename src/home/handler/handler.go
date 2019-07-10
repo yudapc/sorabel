@@ -1,4 +1,4 @@
-package homehandler
+package handler
 
 import (
 	"net/http"
