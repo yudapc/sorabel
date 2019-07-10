@@ -9,9 +9,6 @@ import (
 
 func Home() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusOK, libraries.H{
-			"code": http.StatusOK,
-			"data": "Hello Sorabel",
-		})
+		return libraries.ToJson(c, http.StatusOK, "successfully", "Hello Sorabel")
 	}
 }
