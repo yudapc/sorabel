@@ -8,10 +8,20 @@ import (
 
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
+	"gopkg.in/go-playground/validator.v9"
 )
+
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
+}
 
 func main() {
 	e := echo.New()
+	e.Validator = &CustomValidator{validator: validator.New()}
 	db := initDB("storage.db")
 	migrate(db)
 	e.GET("/", homehandler.Home())

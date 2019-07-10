@@ -1,6 +1,12 @@
-hash: 65fb086d0d44ac564133b50ddb90878b7a82f0c4c50ac1ba241037e3c61c9282
-updated: 2019-07-09T16:26:12.872844+07:00
+hash: c156c42f0b857615b24674c2aeeb4864277af9b29d3041a041f8449b6098119c
+updated: 2019-07-10T13:02:40.86928+07:00
 imports:
+- name: github.com/go-playground/locales
+  version: 630ebbb602847eba93e75ae38bbc7bb7abcf1ff3
+  subpackages:
+  - currency
+- name: github.com/go-playground/universal-translator
+  version: b32fa301c9fe55953584134cb6853a13c87ec0a1
 - name: github.com/labstack/echo
   version: 4256489c0e1ff50bdb71aedd1a21483fe2d67607
 - name: github.com/labstack/gommon
@@ -8,6 +14,8 @@ imports:
   subpackages:
   - color
   - log
+- name: github.com/leodido/go-urn
+  version: a67a23e1c1af3c66528573bb86a87246477277c1
 - name: github.com/mattn/go-colorable
   version: 5411d3eea5978e6cdc258b30de592b60df6aba96
 - name: github.com/mattn/go-isatty
@@ -18,6 +26,8 @@ imports:
   version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
 - name: github.com/valyala/fasttemplate
   version: dcecefd839c4193db0d35b88ec65b4c12d360ab0
+- name: github.com/xeipuuv/gojsonschema
+  version: f971f3cd73b2899de6923801c147f075263e0c50
 - name: golang.org/x/crypto
   version: e7ba82683099cae71475961448ab8f903ea77c26
   subpackages:
@@ -27,4 +37,6 @@ imports:
   version: 47bdb838cce8879fca08207206a5dfde2f2538bc
   subpackages:
   - unix
+- name: gopkg.in/go-playground/validator.v9
+  version: 884d31b8cad6a1ec877f2400d555924cea03bbea
 testImports: []

@@ -12,7 +12,7 @@ import (
 
 func GetPurchases(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		purchases := []int{1, 2, 3}
+		purchases := purchasemodel.GetPurchases(db)
 		return libraries.ToJson(c, http.StatusOK, "successfully", purchases)
 	}
 }
@@ -31,7 +31,14 @@ func CreatePurchase(db *sql.DB) echo.HandlerFunc {
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed!", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusCreated, "purchase has been created!", err)
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errValidate.Error())
+		}
+		id, err := purchasemodel.CreatePurchase(db, data.DateTime, data.ReceiptNumber)
+		dataId := int(id)
+		data.ID = dataId
+		return libraries.ToJson(c, http.StatusCreated, "purchase has been created!", data)
+
 	}
 }
 
