@@ -13,7 +13,7 @@ type Purchase struct {
 	DeletedAt       *time.Time       `json:"deleted_at"`
 	DateTime        string           `json:"date_time" validate:"required"`
 	ReceiptNumber   string           `json:"receipt_number" validate:"required"`
-	PurchaseDetails []PurchaseDetail `json:"purchase_details"`
+	PurchaseDetails []PurchaseDetail `gorm:"foreignkey:PurchaseRefer" json:"purchase_details"`
 }
 
 type PurchaseDetail struct {
@@ -28,6 +28,7 @@ type PurchaseDetail struct {
 	PurchasePrice int        `json:"purchase_price"`
 	Total         int        `json:"total"`
 	Note          string     `json:"note"`
+	PurchaseID    uint       `json:"purchase_id"`
 }
 
 func GetPurchases(db *gorm.DB) ([]Purchase, error) {
@@ -48,10 +49,43 @@ func GetPurchaseDetail(db *gorm.DB, purchase Purchase) (Purchase, error) {
 }
 
 func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
-	result := db.Create(&purchase)
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return Purchase{}, err
+	}
+	row := new(Purchase)
+	result := db.Create(&purchase).Scan(&row)
 	if result.Error != nil {
+		tx.Rollback()
 		return Purchase{}, result.Error
 	}
+
+	for _, purchaseDetail := range purchase.PurchaseDetails {
+		item := PurchaseDetail{
+			Sku:           purchaseDetail.Sku,
+			Name:          purchaseDetail.Name,
+			Qty:           purchaseDetail.Qty,
+			ItemReceived:  purchaseDetail.ItemReceived,
+			PurchasePrice: purchaseDetail.PurchasePrice,
+			Total:         purchaseDetail.Total,
+			Note:          purchaseDetail.Note,
+			PurchaseID:    row.ID,
+		}
+		insertDetail := db.Create(&item)
+		if insertDetail.Error != nil {
+			tx.Rollback()
+			return Purchase{}, insertDetail.Error
+		}
+	}
+
+	tx.Commit()
+
 	return purchase, nil
 }
 
