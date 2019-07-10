@@ -112,3 +112,12 @@ func DeletePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 	}
 	return purchase, nil
 }
+
+func GetPurchaseDetailItems(db *gorm.DB, id uint) ([]PurchaseDetail, error) {
+	purchaseDetails := []PurchaseDetail{}
+	result := db.Where("purchase_id = ?", id).Find(&purchaseDetails)
+	if result.Error != nil {
+		return []PurchaseDetail{}, result.Error
+	}
+	return purchaseDetails, nil
+}

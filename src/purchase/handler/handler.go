@@ -24,8 +24,11 @@ func GetPurchaseDetail(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 		var purchase model.Purchase
-		purchase.ID = uint(id)
+		paramID := uint(id)
+		purchase.ID = paramID
 		data, err := model.GetPurchaseDetail(db, purchase)
+		purchaseDetails, _ := model.GetPurchaseDetailItems(db, paramID)
+		data.PurchaseDetails = purchaseDetails
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
@@ -82,5 +85,17 @@ func DeletePurchase(db *gorm.DB) echo.HandlerFunc {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
 		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", dataItem)
+	}
+}
+
+func GetPurchaseDetailItems(db *gorm.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		purchaseID := uint(id)
+		data, err := model.GetPurchaseDetailItems(db, purchaseID)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }

@@ -44,6 +44,7 @@ func main() {
 	e.POST("/purchases", PurchaseHandler.CreatePurchase(db))
 	e.PUT("/purchases/:id", PurchaseHandler.UpdatePurchase(db))
 	e.DELETE("/purchases/:id", PurchaseHandler.DeletePurchase(db))
+	e.GET("/purchases/:id/items", PurchaseHandler.GetPurchaseDetailItems(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
