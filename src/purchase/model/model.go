@@ -94,3 +94,18 @@ func EditPurchase(db *sql.DB, id string, date_time string, receipt_number string
 
 	return result.RowsAffected()
 }
+
+func DeletePurchase(db *sql.DB, id int) (int64, error) {
+	sql := "DELETE FROM purchases WHERE id = ?"
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err2 := stmt.Exec(id)
+	if err2 != nil {
+		return 0, err2
+	}
+
+	return result.RowsAffected()
+}

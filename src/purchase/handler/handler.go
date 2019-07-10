@@ -72,7 +72,12 @@ func UpdatePurchase(db *sql.DB) echo.HandlerFunc {
 func DeletePurchase(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := strconv.Atoi(c.Param("id"))
+		_, err := purchasemodel.DeletePurchase(db, id)
 		var data = libraries.H{"id": id}
-		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", data)
+		if err == nil {
+			return libraries.ToJson(c, http.StatusOK, "data has been deleted!", data)
+		} else {
+			return err
+		}
 	}
 }
