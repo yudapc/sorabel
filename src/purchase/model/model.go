@@ -42,6 +42,8 @@ func GetPurchases(db *gorm.DB) ([]Purchase, error) {
 
 func GetPurchaseDetail(db *gorm.DB, purchase Purchase) (Purchase, error) {
 	result := db.First(&purchase)
+	purchaseDetails, _ := GetPurchaseDetailItems(db, purchase.ID)
+	purchase.PurchaseDetails = purchaseDetails
 	if result.Error != nil {
 		return Purchase{}, result.Error
 	}

@@ -24,11 +24,8 @@ func GetPurchaseDetail(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 		var purchase model.Purchase
-		paramID := uint(id)
-		purchase.ID = paramID
+		purchase.ID = uint(id)
 		data, err := model.GetPurchaseDetail(db, purchase)
-		purchaseDetails, _ := model.GetPurchaseDetailItems(db, paramID)
-		data.PurchaseDetails = purchaseDetails
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
