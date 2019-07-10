@@ -1,100 +1,66 @@
 package itemmodel
 
 import (
-	"database/sql"
-	"fmt"
+	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Item struct {
-	ID    int    `json:"id"`
-	Sku   string `json:"sku" validate:"required"`
-	Name  string `json:"name" validate:"required"`
-	Stock int    `json:"stock" validate:"required"`
+	ID        uint       `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+	Sku       string     `json:"sku" validate:"required" gorm:"type:varchar(100);unique_index"`
+	Name      string     `json:"name" validate:"required" gorm:"size:255"`
+	Stock     int        `json:"stock" validate:"required"`
 }
 
-func GetItems(db *sql.DB) ([]Item, error) {
-	sql := "SELECT * FROM items"
-	rows, err := db.Query(sql)
-	if err != nil {
-		return []Item{}, err
+func GetItems(db *gorm.DB) ([]Item, error) {
+	var items []Item
+	result := db.Find(&items)
+	if result.Error != nil {
+		return []Item{}, result.Error
 	}
-	defer rows.Close()
-
-	result := []Item{}
-	for rows.Next() {
-		item := Item{}
-		err2 := rows.Scan(&item.ID, &item.Sku, &item.Name, &item.Stock)
-		if err2 != nil {
-			panic(err2)
-		}
-		result = append(result, item)
-	}
-	return result, nil
+	return items, nil
 }
 
-func GetItemDetail(id string, db *sql.DB) (Item, error) {
-	sql := fmt.Sprintf("SELECT * FROM items WHERE id = %s", id)
-	rows, err := db.Query(sql)
-	if err != nil {
-		return Item{}, err
+func GetItemDetail(db *gorm.DB, item Item) (Item, error) {
+	result := db.First(&item)
+	if result.Error != nil {
+		return Item{}, result.Error
 	}
-	defer rows.Close()
-
-	result := Item{}
-	for rows.Next() {
-		item := Item{}
-		err2 := rows.Scan(&item.ID, &item.Sku, &item.Name, &item.Stock)
-		if err2 != nil {
-			panic(err2)
-		}
-		result = item
-	}
-	return result, nil
+	return item, nil
 }
 
-func CreateItem(db *sql.DB, sku string, name string, stock int) (int64, error) {
-	sql := "INSERT INTO items(sku, name, stock) VALUES(?,?,?)"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func CreateItem(db *gorm.DB, item Item) (Item, error) {
+	result := db.Create(&item)
+	if result.Error != nil {
+		return Item{}, result.Error
 	}
-	defer stmt.Close()
-
-	result, err2 := stmt.Exec(sku, name, stock)
-	if err2 != nil {
-		return 0, err2
-	}
-
-	return result.LastInsertId()
+	return item, nil
 }
 
-func EditItem(db *sql.DB, id int, sku string, name string, stock int) (int64, error) {
-	sql := "UPDATE items set sku = ?,	 name = ?, stock = ? WHERE id = ?"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func EditItem(db *gorm.DB, item Item) (Item, error) {
+	_, errorExist := GetItemDetail(db, item)
+	if errorExist != nil {
+		return Item{}, errorExist
 	}
-
-	result, err2 := stmt.Exec(sku, name, stock, id)
-
-	if err2 != nil {
-		return 0, err2
+	result := db.Save(&item)
+	if result.Error != nil {
+		return Item{}, result.Error
 	}
-
-	return result.RowsAffected()
+	return item, nil
 }
 
-func DeleteItem(db *sql.DB, id int) (int64, error) {
-	sql := "DELETE FROM items WHERE id = ?"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func DeleteItem(db *gorm.DB, item Item) (Item, error) {
+	_, errorExist := GetItemDetail(db, item)
+	if errorExist != nil {
+		return Item{}, errorExist
 	}
-
-	result, err2 := stmt.Exec(id)
-	if err2 != nil {
-		return 0, err2
+	result := db.Delete(&item)
+	if result.Error != nil {
+		return Item{}, result.Error
 	}
-
-	return result.RowsAffected()
+	return item, nil
 }

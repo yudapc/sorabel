@@ -1,16 +1,16 @@
 package purchasehandler
 
 import (
-	"database/sql"
 	"net/http"
 	"sorabel/libraries"
 	purchasemodel "sorabel/src/purchase/model"
 	"strconv"
 
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 )
 
-func GetPurchases(db *sql.DB) echo.HandlerFunc {
+func GetPurchases(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		data, err := purchasemodel.GetPurchases(db)
 		if err != nil {
@@ -20,9 +20,12 @@ func GetPurchases(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func GetPurchaseDetail(db *sql.DB) echo.HandlerFunc {
+func GetPurchaseDetail(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		data, err := purchasemodel.GetPurchaseDetail(db, c.Param("id"))
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var purchase purchasemodel.Purchase
+		purchase.ID = uint(id)
+		data, err := purchasemodel.GetPurchaseDetail(db, purchase)
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
@@ -30,26 +33,7 @@ func GetPurchaseDetail(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func CreatePurchase(db *sql.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		var data purchasemodel.Purchase
-		if errBind := c.Bind(&data); errBind != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errBind.Error())
-		}
-		if errValidate := c.Validate(&data); errValidate != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errValidate.Error())
-		}
-		id, err := purchasemodel.CreatePurchase(db, data.DateTime, data.ReceiptNumber)
-		dataID := int(id)
-		data.ID = dataID
-		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
-		}
-		return libraries.ToJson(c, http.StatusCreated, "purchase has been created!", data)
-	}
-}
-
-func UpdatePurchase(db *sql.DB) echo.HandlerFunc {
+func CreatePurchase(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data purchasemodel.Purchase
 		if errBind := c.Bind(&data); errBind != nil {
@@ -58,25 +42,45 @@ func UpdatePurchase(db *sql.DB) echo.HandlerFunc {
 		if errValidate := c.Validate(&data); errValidate != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
 		}
-		id, err := purchasemodel.EditPurchase(db, c.Param("id"), data.DateTime, data.ReceiptNumber)
-		dataID := int(id)
-		data.ID = dataID
+		dataItem, err := purchasemodel.CreatePurchase(db, data)
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "purchase has been created!", data)
+		return libraries.ToJson(c, http.StatusCreated, "data has been created!", dataItem)
 	}
 }
 
-func DeletePurchase(db *sql.DB) echo.HandlerFunc {
+func UpdatePurchase(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-		_, err := purchasemodel.DeletePurchase(db, id)
-		var data = libraries.H{"id": id}
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var data purchasemodel.Purchase
+		data.ID = uint(id)
+
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		}
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		}
+
+		_, err := purchasemodel.EditPurchase(db, data)
 		if err == nil {
-			return libraries.ToJson(c, http.StatusOK, "data has been deleted!", data)
+			return libraries.ToJson(c, http.StatusOK, "data has been updated!", data)
 		} else {
 			return err
 		}
+	}
+}
+
+func DeletePurchase(db *gorm.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var data purchasemodel.Purchase
+		data.ID = uint(id)
+		dataItem, err := purchasemodel.DeletePurchase(db, data)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", dataItem)
 	}
 }

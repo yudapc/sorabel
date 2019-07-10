@@ -1,111 +1,80 @@
 package purchasemodel
 
 import (
-	"database/sql"
-	"fmt"
+	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Purchase struct {
-	ID             int              `json:"id"`
-	DateTime       string           `json:"date_time" validate:"required"`
-	ReceiptNumber  string           `json:"receipt_number" validate:"required"`
-	PurchaseDetail []PurchaseDetail `json:"purchase_details"`
+	ID            uint       `gorm:"primary_key" json:"id"`
+	CreatedAt     time.Time  `json:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at"`
+	DeletedAt     *time.Time `json:"deleted_at"`
+	DateTime      string     `json:"date_time" validate:"required"`
+	ReceiptNumber string     `json:"receipt_number" validate:"required"`
+	// PurchaseDetail []PurchaseDetail `json:"purchase_details"`
 }
 
 type PurchaseDetail struct {
-	ID            int
-	Sku           string `json:"sku"`
-	Name          string `json:"name"`
-	Qty           int    `json:"qty"`
-	ItemReceived  int    `json:"item_received"`
-	PurchasePrice int    `json:"purchase_price"`
-	Total         int    `json:"total"`
-	Note          string `json:"note"`
+	ID            uint       `gorm:"primary_key" json:"id"`
+	CreatedAt     time.Time  `json:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at"`
+	DeletedAt     *time.Time `json:"deleted_at"`
+	Sku           string     `json:"sku"`
+	Name          string     `json:"name"`
+	Qty           int        `json:"qty"`
+	ItemReceived  int        `json:"item_received"`
+	PurchasePrice int        `json:"purchase_price"`
+	Total         int        `json:"total"`
+	Note          string     `json:"note"`
 }
 
-func GetPurchases(db *sql.DB) ([]Purchase, error) {
-	sql := "SELECT * FROM purchases"
-	rows, err := db.Query(sql)
-	if err != nil {
-		return []Purchase{}, err
+func GetPurchases(db *gorm.DB) ([]Purchase, error) {
+	var purchases []Purchase
+	result := db.Find(&purchases)
+	if result.Error != nil {
+		return []Purchase{}, result.Error
 	}
-	defer rows.Close()
-
-	result := []Purchase{}
-	for rows.Next() {
-		item := Purchase{}
-		err2 := rows.Scan(&item.ID, &item.DateTime, &item.ReceiptNumber)
-		if err2 != nil {
-			panic(err2)
-		}
-		result = append(result, item)
-	}
-	return result, nil
+	return purchases, nil
 }
 
-func GetPurchaseDetail(db *sql.DB, id string) (Purchase, error) {
-	sql := fmt.Sprintf("SELECT * FROM purchases WHERE id = %s", id)
-	rows, err := db.Query(sql)
-	if err != nil {
-		return Purchase{}, err
+func GetPurchaseDetail(db *gorm.DB, purchase Purchase) (Purchase, error) {
+	result := db.First(&purchase)
+	if result.Error != nil {
+		return Purchase{}, result.Error
 	}
-	defer rows.Close()
-
-	result := Purchase{}
-	for rows.Next() {
-		item := Purchase{}
-		err2 := rows.Scan(&item.ID, &item.DateTime, &item.ReceiptNumber)
-		if err2 != nil {
-			panic(err2)
-		}
-		result = item
-	}
-	return result, err
+	return purchase, nil
 }
 
-func CreatePurchase(db *sql.DB, date_time string, receipt_number string) (int64, error) {
-	sql := "INSERT INTO purchases(date_time, receipt_number) VALUES(?,?)"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
+	result := db.Create(&purchase)
+	if result.Error != nil {
+		return Purchase{}, result.Error
 	}
-	defer stmt.Close()
-
-	result, err2 := stmt.Exec(date_time, receipt_number)
-	if err2 != nil {
-		return 0, err2
-	}
-
-	return result.LastInsertId()
+	return purchase, nil
 }
 
-func EditPurchase(db *sql.DB, id string, date_time string, receipt_number string) (int64, error) {
-	sql := "UPDATE purchases SET date_time = ?, receipt_number = ? WHERE id = ?"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func EditPurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
+	_, errorExist := GetPurchaseDetail(db, purchase)
+	if errorExist != nil {
+		return Purchase{}, errorExist
 	}
-
-	result, err2 := stmt.Exec(date_time, receipt_number, id)
-
-	if err2 != nil {
-		return 0, err2
+	result := db.Save(&purchase)
+	if result.Error != nil {
+		return Purchase{}, result.Error
 	}
-
-	return result.RowsAffected()
+	return purchase, nil
 }
 
-func DeletePurchase(db *sql.DB, id int) (int64, error) {
-	sql := "DELETE FROM purchases WHERE id = ?"
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return 0, err
+func DeletePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
+	_, errorExist := GetPurchaseDetail(db, purchase)
+	if errorExist != nil {
+		return Purchase{}, errorExist
 	}
-
-	result, err2 := stmt.Exec(id)
-	if err2 != nil {
-		return 0, err2
+	result := db.Delete(&purchase)
+	if result.Error != nil {
+		return Purchase{}, result.Error
 	}
-
-	return result.RowsAffected()
+	return purchase, nil
 }

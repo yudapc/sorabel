@@ -1,16 +1,17 @@
 package itemhandler
 
 import (
-	"database/sql"
 	"net/http"
 	"sorabel/libraries"
 	itemmodel "sorabel/src/item/model"
 	"strconv"
 
+	"github.com/jinzhu/gorm"
+
 	"github.com/labstack/echo"
 )
 
-func GetItems(db *sql.DB) echo.HandlerFunc {
+func GetItems(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		data, err := itemmodel.GetItems(db)
 		if err != nil {
@@ -20,10 +21,12 @@ func GetItems(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func GetItemDetail(db *sql.DB) echo.HandlerFunc {
+func GetItemDetail(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id")
-		data, err := itemmodel.GetItemDetail(id, db)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var item itemmodel.Item
+		item.ID = uint(id)
+		data, err := itemmodel.GetItemDetail(db, item)
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
@@ -31,7 +34,7 @@ func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func CreateItem(db *sql.DB) echo.HandlerFunc {
+func CreateItem(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data itemmodel.Item
 		if errBind := c.Bind(&data); errBind != nil {
@@ -40,25 +43,19 @@ func CreateItem(db *sql.DB) echo.HandlerFunc {
 		if errValidate := c.Validate(&data); errValidate != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
 		}
-
-		id, err := itemmodel.CreateItem(db, data.Sku, data.Name, data.Stock)
-
+		dataItem, err := itemmodel.CreateItem(db, data)
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
-
-		dataID := int(id)
-		data.ID = dataID
-		return libraries.ToJson(c, http.StatusCreated, "item has been created!", data)
+		return libraries.ToJson(c, http.StatusCreated, "data has been created!", dataItem)
 	}
 }
 
-func UpdateItem(db *sql.DB) echo.HandlerFunc {
+func UpdateItem(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 		var data itemmodel.Item
-		data.ID = id
+		data.ID = uint(id)
 
 		if errBind := c.Bind(&data); errBind != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
@@ -67,7 +64,7 @@ func UpdateItem(db *sql.DB) echo.HandlerFunc {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
 		}
 
-		_, err := itemmodel.EditItem(db, id, data.Sku, data.Name, data.Stock)
+		_, err := itemmodel.EditItem(db, data)
 		if err == nil {
 			return libraries.ToJson(c, http.StatusOK, "data has been updated!", data)
 		} else {
@@ -76,15 +73,15 @@ func UpdateItem(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
-func DeleteItem(db *sql.DB) echo.HandlerFunc {
+func DeleteItem(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-		_, err := itemmodel.DeleteItem(db, id)
-		var data = libraries.H{"id": id}
-		if err == nil {
-			return libraries.ToJson(c, http.StatusOK, "data has been deleted!", data)
-		} else {
-			return err
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var data itemmodel.Item
+		data.ID = uint(id)
+		dataItem, err := itemmodel.DeleteItem(db, data)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
+		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", dataItem)
 	}
 }

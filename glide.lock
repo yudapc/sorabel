@@ -1,5 +1,5 @@
-hash: eb413736f37b09aa3e36c0d2f65ea7e64f8ca31ef1f6044cbb310353902d735c
-updated: 2019-07-10T13:51:02.621734+07:00
+hash: 297a58514f5f3e1831b64481a2dbbb38e73928e905ae105864cc9899b2d00752
+updated: 2019-07-10T14:24:05.850382+07:00
 imports:
 - name: github.com/go-playground/locales
   version: 630ebbb602847eba93e75ae38bbc7bb7abcf1ff3
@@ -7,6 +7,12 @@ imports:
   - currency
 - name: github.com/go-playground/universal-translator
   version: b32fa301c9fe55953584134cb6853a13c87ec0a1
+- name: github.com/jinzhu/gorm
+  version: 836fb2c19d84dac7b0272958dfb9af7cf0d0ade4
+  subpackages:
+  - dialects/sqlite
+- name: github.com/jinzhu/inflection
+  version: f5c5f50e6090ae76a29240b61ae2a90dd810112e
 - name: github.com/labstack/echo
   version: 4256489c0e1ff50bdb71aedd1a21483fe2d67607
 - name: github.com/labstack/gommon
