@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	homehandler "sorabel/src/home/handler"
 	itemhandler "sorabel/src/item/handler"
+	purchasehandler "sorabel/src/purchase/handler"
 
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
@@ -19,6 +20,11 @@ func main() {
 	e.POST("/items", itemhandler.CreateItem(db))
 	e.PUT("/items/:id", itemhandler.UpdateItem(db))
 	e.DELETE("/items/:id", itemhandler.DeleteItem(db))
+	e.GET("/purchases", purchasehandler.GetPurchases(db))
+	e.GET("/purchases/:id", purchasehandler.GetPurchaseDetail(db))
+	e.POST("/purchases", purchasehandler.CreatePurchase(db))
+	e.PUT("/purchases/:id", purchasehandler.UpdatePurchase(db))
+	e.DELETE("/purchases/:id", purchasehandler.DeletePurchase(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
