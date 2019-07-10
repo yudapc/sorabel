@@ -2,7 +2,8 @@ package main
 
 import (
 	"database/sql"
-	"sorabel/handlers"
+	homehandler "sorabel/src/home/handler"
+	itemhandler "sorabel/src/item/handler"
 
 	"github.com/labstack/echo"
 	_ "github.com/mattn/go-sqlite3"
@@ -12,12 +13,12 @@ func main() {
 	e := echo.New()
 	db := initDB("storage.db")
 	migrate(db)
-	e.GET("/", handlers.Home())
-	e.GET("/items", handlers.GetItems(db))
-	e.GET("/items/:id", handlers.GetItemDetail(db))
-	e.POST("/items", handlers.CreateItem(db))
-	e.PUT("/items/:id", handlers.UpdateItem(db))
-	e.DELETE("/items/:id", handlers.DeleteItem(db))
+	e.GET("/", homehandler.Home())
+	e.GET("/items", itemhandler.GetItems(db))
+	e.GET("/items/:id", itemhandler.GetItemDetail(db))
+	e.POST("/items", itemhandler.CreateItem(db))
+	e.PUT("/items/:id", itemhandler.UpdateItem(db))
+	e.DELETE("/items/:id", itemhandler.DeleteItem(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 

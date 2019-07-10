@@ -1,10 +1,10 @@
-package handlers
+package itemhandler
 
 import (
 	"database/sql"
 	"net/http"
 	"sorabel/libraries"
-	"sorabel/models"
+	itemmodel "sorabel/src/item/model"
 	"strconv"
 
 	"github.com/labstack/echo"
@@ -12,7 +12,7 @@ import (
 
 func GetItems(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		items := models.GetItems(db)
+		items := itemmodel.GetItems(db)
 		return c.JSON(http.StatusOK, libraries.H{
 			"code":    http.StatusOK,
 			"message": "successfully",
@@ -24,7 +24,7 @@ func GetItems(db *sql.DB) echo.HandlerFunc {
 func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
-		data := models.GetItemDetail(id, db)
+		data := itemmodel.GetItemDetail(id, db)
 		return c.JSON(http.StatusOK, libraries.H{
 			"code":    http.StatusOK,
 			"message": "successfully",
@@ -35,10 +35,10 @@ func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 
 func CreateItem(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var data models.Item
+		var data itemmodel.Item
 		c.Bind(&data)
 
-		id, err := models.CreateItem(db, data.Sku, data.Name, data.Stock)
+		id, err := itemmodel.CreateItem(db, data.Sku, data.Name, data.Stock)
 		dataId := int(id)
 		data.ID = dataId
 
@@ -63,11 +63,11 @@ func UpdateItem(db *sql.DB) echo.HandlerFunc {
 			return errorConvert
 		}
 
-		var data models.Item
+		var data itemmodel.Item
 		data.ID = id
 		c.Bind(&data)
 
-		_, err := models.EditItem(db, id, data.Sku, data.Name, data.Stock)
+		_, err := itemmodel.EditItem(db, id, data.Sku, data.Name, data.Stock)
 		if err == nil {
 			return c.JSON(http.StatusOK, libraries.H{
 				"code":    http.StatusOK,
@@ -83,7 +83,7 @@ func UpdateItem(db *sql.DB) echo.HandlerFunc {
 func DeleteItem(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := strconv.Atoi(c.Param("id"))
-		_, err := models.DeleteItem(db, id)
+		_, err := itemmodel.DeleteItem(db, id)
 		if err == nil {
 			return c.JSON(http.StatusOK, libraries.H{
 				"code":    http.StatusOK,

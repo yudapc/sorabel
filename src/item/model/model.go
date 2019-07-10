@@ -1,4 +1,4 @@
-package models
+package itemmodel
 
 import (
 	"database/sql"
