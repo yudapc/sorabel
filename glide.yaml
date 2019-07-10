@@ -16,3 +16,6 @@ import:
   version: v1.9.10
 - package: github.com/jinzhu/inflection
   version: v1.0.0
+- package: github.com/xeipuuv/gojsonschema
+  version: v1.1.0
+- package: github.com/xeipuuv/gojsonreference
