@@ -1,5 +1,5 @@
-hash: c156c42f0b857615b24674c2aeeb4864277af9b29d3041a041f8449b6098119c
-updated: 2019-07-10T13:02:40.86928+07:00
+hash: eb413736f37b09aa3e36c0d2f65ea7e64f8ca31ef1f6044cbb310353902d735c
+updated: 2019-07-10T13:51:02.621734+07:00
 imports:
 - name: github.com/go-playground/locales
   version: 630ebbb602847eba93e75ae38bbc7bb7abcf1ff3
@@ -26,8 +26,6 @@ imports:
   version: e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7
 - name: github.com/valyala/fasttemplate
   version: dcecefd839c4193db0d35b88ec65b4c12d360ab0
-- name: github.com/xeipuuv/gojsonschema
-  version: f971f3cd73b2899de6923801c147f075263e0c50
 - name: golang.org/x/crypto
   version: e7ba82683099cae71475961448ab8f903ea77c26
   subpackages:

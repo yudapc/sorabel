@@ -28,18 +28,20 @@ func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 func CreateItem(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data itemmodel.Item
-		c.Bind(&data)
-
-		id, err := itemmodel.CreateItem(db, data.Sku, data.Name, data.Stock)
-		dataId := int(id)
-		data.ID = dataId
-
-		if err == nil {
-			return libraries.ToJson(c, http.StatusCreated, "successfully", data)
-		} else {
-			return err
+		errBind := c.Bind(&data)
+		if errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errBind.Error())
 		}
 
+		id, err := itemmodel.CreateItem(db, data.Sku, data.Name, data.Stock)
+
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+
+		dataID := int(id)
+		data.ID = dataID
+		return libraries.ToJson(c, http.StatusCreated, "item has been created!", data)
 	}
 }
 

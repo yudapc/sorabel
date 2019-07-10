@@ -12,31 +12,39 @@ import (
 
 func GetPurchases(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		purchases := purchasemodel.GetPurchases(db)
-		return libraries.ToJson(c, http.StatusOK, "successfully", purchases)
+		data, err := purchasemodel.GetPurchases(db)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }
 
 func GetPurchaseDetail(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, _ := strconv.Atoi(c.Param("id"))
-		return libraries.ToJson(c, http.StatusOK, "successfully", id)
+		data, err := purchasemodel.GetPurchaseDetail(db, c.Param("id"))
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }
 
 func CreatePurchase(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data purchasemodel.Purchase
-		err := c.Bind(&data)
-		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed!", err.Error())
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errBind.Error())
 		}
 		if errValidate := c.Validate(&data); errValidate != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errValidate.Error())
 		}
 		id, err := purchasemodel.CreatePurchase(db, data.DateTime, data.ReceiptNumber)
-		dataId := int(id)
-		data.ID = dataId
+		dataID := int(id)
+		data.ID = dataID
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
 		return libraries.ToJson(c, http.StatusCreated, "purchase has been created!", data)
 
 	}
@@ -45,11 +53,19 @@ func CreatePurchase(db *sql.DB) echo.HandlerFunc {
 func UpdatePurchase(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data purchasemodel.Purchase
-		err := c.Bind(&data)
-		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed!", err.Error())
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "purchase has been updated!", err)
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		}
+		id, err := purchasemodel.EditPurchase(db, c.Param("id"), data.DateTime, data.ReceiptNumber)
+		dataID := int(id)
+		data.ID = dataID
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "purchase has been created!", data)
 	}
 }
 

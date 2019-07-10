@@ -1,16 +1,14 @@
 package: sorabel
 import:
-- package: github.com/labstack/echo
-  version: ~3.1
-- package: github.com/labstack/gommon
-  version: v0.2.9
-  subpackages:
-  - color
-- package: github.com/mattn/go-sqlite3
-  version: v1.10.0
-- package: gopkg.in/go-playground/validator.v9
-  version: v9.29.0
-- package: github.com/go-playground/universal-translator
-  version: v0.16.0
-- package: github.com/xeipuuv/gojsonschema
-  version: v1.1.0
+  - package: github.com/labstack/echo
+    version: ~3.1
+  - package: github.com/labstack/gommon
+    version: v0.2.9
+    subpackages:
+      - color
+  - package: github.com/mattn/go-sqlite3
+    version: v1.10.0
+  - package: gopkg.in/go-playground/validator.v9
+    version: v9.29.0
+  - package: github.com/go-playground/universal-translator
+    version: v0.16.0
