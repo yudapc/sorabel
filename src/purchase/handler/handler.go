@@ -46,7 +46,6 @@ func CreatePurchase(db *sql.DB) echo.HandlerFunc {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}
 		return libraries.ToJson(c, http.StatusCreated, "purchase has been created!", data)
-
 	}
 }
 

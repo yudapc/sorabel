@@ -12,11 +12,11 @@ type Item struct {
 	Stock int    `json:"stock" validate:"required"`
 }
 
-func GetItems(db *sql.DB) []Item {
+func GetItems(db *sql.DB) ([]Item, error) {
 	sql := "SELECT * FROM items"
 	rows, err := db.Query(sql)
 	if err != nil {
-		panic(err)
+		return []Item{}, err
 	}
 	defer rows.Close()
 
@@ -29,14 +29,14 @@ func GetItems(db *sql.DB) []Item {
 		}
 		result = append(result, item)
 	}
-	return result
+	return result, nil
 }
 
-func GetItemDetail(id string, db *sql.DB) Item {
+func GetItemDetail(id string, db *sql.DB) (Item, error) {
 	sql := fmt.Sprintf("SELECT * FROM items WHERE id = %s", id)
 	rows, err := db.Query(sql)
 	if err != nil {
-		panic(err)
+		return Item{}, err
 	}
 	defer rows.Close()
 
@@ -49,7 +49,7 @@ func GetItemDetail(id string, db *sql.DB) Item {
 		}
 		result = item
 	}
-	return result
+	return result, nil
 }
 
 func CreateItem(db *sql.DB, sku string, name string, stock int) (int64, error) {
@@ -88,12 +88,12 @@ func DeleteItem(db *sql.DB, id int) (int64, error) {
 	sql := "DELETE FROM items WHERE id = ?"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
 
 	result, err2 := stmt.Exec(id)
 	if err2 != nil {
-		panic(err2)
+		return 0, err2
 	}
 
 	return result.RowsAffected()

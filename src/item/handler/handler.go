@@ -12,15 +12,21 @@ import (
 
 func GetItems(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		items := itemmodel.GetItems(db)
-		return libraries.ToJson(c, http.StatusOK, "successfully", items)
+		data, err := itemmodel.GetItems(db)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }
 
 func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
-		data := itemmodel.GetItemDetail(id, db)
+		data, err := itemmodel.GetItemDetail(id, db)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
 		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }
@@ -28,9 +34,11 @@ func GetItemDetail(db *sql.DB) echo.HandlerFunc {
 func CreateItem(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data itemmodel.Item
-		errBind := c.Bind(&data)
-		if errBind != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed!", errBind.Error())
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		}
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
 		}
 
 		id, err := itemmodel.CreateItem(db, data.Sku, data.Name, data.Stock)
@@ -51,7 +59,13 @@ func UpdateItem(db *sql.DB) echo.HandlerFunc {
 
 		var data itemmodel.Item
 		data.ID = id
-		c.Bind(&data)
+
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		}
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		}
 
 		_, err := itemmodel.EditItem(db, id, data.Sku, data.Name, data.Stock)
 		if err == nil {
