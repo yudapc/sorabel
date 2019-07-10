@@ -57,11 +57,7 @@ func CreateItem(db *sql.DB) echo.HandlerFunc {
 
 func UpdateItem(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		paramId := c.Param("id")
-		id, errorConvert := strconv.Atoi(paramId)
-		if errorConvert != nil {
-			return errorConvert
-		}
+		id, _ := strconv.Atoi(c.Param("id"))
 
 		var data itemmodel.Item
 		data.ID = id
