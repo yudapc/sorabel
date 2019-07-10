@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	"os"
+	"sorabel/helpers"
 	"sorabel/libraries"
 	"sorabel/src/item/model"
 	"strconv"
@@ -10,7 +10,6 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"github.com/labstack/echo"
-	"github.com/xeipuuv/gojsonschema"
 )
 
 func GetItems(db *gorm.DB) echo.HandlerFunc {
@@ -39,14 +38,9 @@ func GetItemDetail(db *gorm.DB) echo.HandlerFunc {
 func CreateItem(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var data model.Item
-		dir, _ := os.Getwd()
-		pathSchema := dir + "/schemas/item.json"
-		schemaLoader := gojsonschema.NewReferenceLoader("file:///" + pathSchema)
 
-		document := gojsonschema.NewGoLoader(c.Request().Body)
-		_, errJSONValidate := gojsonschema.Validate(schemaLoader, document)
-		if errJSONValidate != nil {
-			panic(errJSONValidate.Error())
+		if errJSONValidate := helpers.SchemaValidation(c, "/schemas/item.json"); errJSONValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errJSONValidate.Error())
 		}
 		if errBind := c.Bind(&data); errBind != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
