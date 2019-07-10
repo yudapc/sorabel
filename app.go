@@ -6,6 +6,8 @@ import (
 	ItemModel "sorabel/src/item/model"
 	PurchaseHandler "sorabel/src/purchase/handler"
 	PurchaseModel "sorabel/src/purchase/model"
+	SalesHandler "sorabel/src/sales/handler"
+	SalesModel "sorabel/src/sales/model"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -45,6 +47,12 @@ func main() {
 	e.PUT("/purchases/:id", PurchaseHandler.UpdatePurchase(db))
 	e.DELETE("/purchases/:id", PurchaseHandler.DeletePurchase(db))
 	e.GET("/purchases/:id/items", PurchaseHandler.GetPurchaseDetailItems(db))
+	e.GET("/sales", SalesHandler.GetSales(db))
+	e.GET("/sales/:id", SalesHandler.GetSalesDetail(db))
+	e.POST("/sales", SalesHandler.CreateSales(db))
+	e.PUT("/sales/:id", SalesHandler.UpdateSales(db))
+	e.DELETE("/sales/:id", SalesHandler.DeleteSales(db))
+	e.GET("/sales/:id/items", SalesHandler.GetSalesDetailItems(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
@@ -53,5 +61,7 @@ func migrate(db *gorm.DB) {
 		&ItemModel.Item{},
 		&PurchaseModel.Purchase{},
 		&PurchaseModel.PurchaseDetail{},
+		&SalesModel.Sales{},
+		&SalesModel.SalesDetail{},
 	)
 }
