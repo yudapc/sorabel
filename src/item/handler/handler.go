@@ -143,8 +143,9 @@ func ExportItems(db *gorm.DB) echo.HandlerFunc {
 
 		for _, item := range items {
 			stock := strconv.Itoa(item.Stock)
-			purchasePrice := strconv.Itoa(item.PurchasePrice)
-			sellingPrice := strconv.Itoa(item.SellingPrice)
+			purchasePrice := helpers.FormatRupiah(float64(item.PurchasePrice))
+			sellingPrice := helpers.FormatRupiah(float64(item.SellingPrice))
+
 			data = append(data, []string{
 				item.Sku,
 				item.Name,

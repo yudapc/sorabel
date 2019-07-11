@@ -1,6 +1,8 @@
-hash: 737008ed68798b13e51ccfe93893468d0ee2ccf17a64fb364cace0eb6724149b
-updated: 2019-07-10T20:23:37.414806+07:00
+hash: 07e3dc5afb5aa185397bdab196aae83c13c18303280ccb6783d56bb70f149a5d
+updated: 2019-07-11T15:18:08.100855+07:00
 imports:
+- name: github.com/dustin/go-humanize
+  version: 9f541cc9db5d55bce703bd99987c9d5cb8eea45e
 - name: github.com/go-playground/locales
   version: 630ebbb602847eba93e75ae38bbc7bb7abcf1ff3
   subpackages:

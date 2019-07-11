@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/csv"
 	"net/http"
+	"os"
 	"sorabel/helpers"
 	"sorabel/src/purchase/model"
 	"strconv"
@@ -105,6 +107,43 @@ func ImportPurchases(db *gorm.DB) echo.HandlerFunc {
 
 func ExportPurchases(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		return helpers.ToJson(context, http.StatusOK, "successfully", nil)
+		fileName := "purchase.csv"
+		uploadPath := helpers.ProjectDirectory() + "/uploaded/"
+		fullPath := uploadPath + fileName
+
+		os.Remove(fullPath)
+		file, _ := os.Create(fullPath)
+		defer file.Close()
+		writer := csv.NewWriter(file)
+
+		data := [][]string{}
+		data = append(data, []string{"Waktu", "SKU", "Nama Barang", "Jumlah Pemesanan", "Jumlah Diterima", "Harga Beli", "Total", "Nomor Kwitansi", "Catatan"})
+		purchases, _ := model.GetPurchases(db)
+
+		for _, purchase := range purchases {
+			purchaseDetails, _ := model.GetPurchaseDetailItems(db, purchase.ID)
+			for _, purchaseDetail := range purchaseDetails {
+				qty := strconv.Itoa(purchaseDetail.Qty)
+				itemReceived := strconv.Itoa(purchaseDetail.ItemReceived)
+				purchasePrice := helpers.FormatRupiah(float64(purchaseDetail.PurchasePrice))
+				total := helpers.FormatRupiah(float64(purchaseDetail.Total))
+				data = append(data, []string{
+					purchase.DateTime,
+					purchaseDetail.Sku,
+					purchaseDetail.Name,
+					qty,
+					itemReceived,
+					purchasePrice,
+					total,
+					purchase.ReceiptNumber,
+					purchaseDetail.Note,
+				})
+			}
+		}
+
+		writer.WriteAll(data)
+		defer writer.Flush()
+
+		return context.Attachment(fullPath, fileName)
 	}
 }
