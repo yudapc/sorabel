@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"sorabel/helpers"
-	"sorabel/libraries"
 	"sorabel/src/item/model"
 	"strconv"
 
@@ -16,9 +15,9 @@ func GetItems(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		data, err := model.GetItems(db)
 		if err != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
+			return helpers.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(context, http.StatusOK, "successfully", data)
+		return helpers.ToJson(context, http.StatusOK, "successfully", data)
 	}
 }
 
@@ -29,9 +28,9 @@ func GetItemDetail(db *gorm.DB) echo.HandlerFunc {
 		item.ID = uint(id)
 		data, err := model.GetItemDetail(db, item)
 		if err != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
+			return helpers.ToJsonBadRequest(context, err.Error())
 		}
-		return libraries.ToJson(context, http.StatusOK, "successfully", data)
+		return helpers.ToJson(context, http.StatusOK, "successfully", data)
 	}
 }
 
@@ -40,19 +39,19 @@ func CreateItem(db *gorm.DB) echo.HandlerFunc {
 		var data model.Item
 
 		if errJSONValidate := helpers.SchemaValidation(context, "/schemas/item.json"); errJSONValidate != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", errJSONValidate.Error())
+			return helpers.ToJsonBadRequest(context, errJSONValidate.Error())
 		}
 		if errBind := context.Bind(&data); errBind != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", errBind.Error())
+			return helpers.ToJsonBadRequest(context, errBind.Error())
 		}
 		if errValidate := context.Validate(&data); errValidate != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", errValidate.Error())
+			return helpers.ToJsonBadRequest(context, errValidate.Error())
 		}
 		dataItem, err := model.CreateItem(db, data)
 		if err != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
+			return helpers.ToJsonBadRequest(context, err.Error())
 		}
-		return libraries.ToJson(context, http.StatusCreated, "data has been created!", dataItem)
+		return helpers.ToJson(context, http.StatusCreated, "data has been created!", dataItem)
 	}
 }
 
@@ -63,15 +62,15 @@ func UpdateItem(db *gorm.DB) echo.HandlerFunc {
 		data.ID = uint(id)
 
 		if errBind := context.Bind(&data); errBind != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", errBind.Error())
+			return helpers.ToJsonBadRequest(context, errBind.Error())
 		}
 		if errValidate := context.Validate(&data); errValidate != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", errValidate.Error())
+			return helpers.ToJsonBadRequest(context, errValidate.Error())
 		}
 
 		_, err := model.EditItem(db, data)
 		if err == nil {
-			return libraries.ToJson(context, http.StatusOK, "data has been updated!", data)
+			return helpers.ToJson(context, http.StatusOK, "data has been updated!", data)
 		} else {
 			return err
 		}
@@ -85,8 +84,8 @@ func DeleteItem(db *gorm.DB) echo.HandlerFunc {
 		data.ID = uint(id)
 		dataItem, err := model.DeleteItem(db, data)
 		if err != nil {
-			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
+			return helpers.ToJsonBadRequest(context, err.Error())
 		}
-		return libraries.ToJson(context, http.StatusOK, "data has been deleted!", dataItem)
+		return helpers.ToJson(context, http.StatusOK, "data has been deleted!", dataItem)
 	}
 }
