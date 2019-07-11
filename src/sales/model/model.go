@@ -43,6 +43,12 @@ func GetSales(db *gorm.DB, context echo.Context) ([]Sales, error) {
 	if result.Error != nil {
 		return []Sales{}, result.Error
 	}
+
+	for i, _ := range sales {
+		salesDetails, _ := GetSalesDetailItems(db, sales[i].ID)
+		sales[i].SalesDetails = salesDetails
+	}
+
 	return sales, nil
 }
 
