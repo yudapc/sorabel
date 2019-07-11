@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/csv"
 	"net/http"
+	"os"
 	"sorabel/helpers"
 	"sorabel/src/item/model"
 	"strconv"
@@ -122,5 +123,40 @@ func ImportItems(db *gorm.DB) echo.HandlerFunc {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
 		return helpers.ToJson(context, http.StatusOK, "data success imported", importedDataItems)
+	}
+}
+
+func ExportItems(db *gorm.DB) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		fileName := "items.csv"
+		uploadPath := helpers.ProjectDirectory() + "/uploaded/"
+		fullPath := uploadPath + fileName
+
+		os.Remove(fullPath)
+		file, _ := os.Create(fullPath)
+		defer file.Close()
+		writer := csv.NewWriter(file)
+
+		data := [][]string{}
+		data = append(data, []string{"SKU", "Nama Item", "Jumlah Sekarang", "Harga Beli", "Harga Jual"})
+		items, _ := model.GetItems(db)
+
+		for _, item := range items {
+			stock := strconv.Itoa(item.Stock)
+			purchasePrice := strconv.Itoa(item.PurchasePrice)
+			sellingPrice := strconv.Itoa(item.SellingPrice)
+			data = append(data, []string{
+				item.Sku,
+				item.Name,
+				stock,
+				purchasePrice,
+				sellingPrice,
+			})
+		}
+
+		writer.WriteAll(data)
+		defer writer.Flush()
+
+		return context.Attachment(fullPath, fileName)
 	}
 }

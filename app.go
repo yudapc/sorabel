@@ -42,6 +42,7 @@ func main() {
 	e.PUT("/items/:id", ItemHandler.UpdateItem(db))
 	e.DELETE("/items/:id", ItemHandler.DeleteItem(db))
 	e.POST("/items/import", ItemHandler.ImportItems(db))
+	e.GET("/items/export", ItemHandler.ExportItems(db))
 	e.GET("/purchases", PurchaseHandler.GetPurchases(db))
 	e.GET("/purchases/:id", PurchaseHandler.GetPurchaseDetail(db))
 	e.POST("/purchases", PurchaseHandler.CreatePurchase(db))
@@ -49,6 +50,7 @@ func main() {
 	e.DELETE("/purchases/:id", PurchaseHandler.DeletePurchase(db))
 	e.GET("/purchases/:id/items", PurchaseHandler.GetPurchaseDetailItems(db))
 	e.POST("/purchases/import", PurchaseHandler.ImportPurchases(db))
+	e.GET("/purchases/export", PurchaseHandler.ExportPurchases(db))
 	e.GET("/sales", SalesHandler.GetSales(db))
 	e.GET("/sales/:id", SalesHandler.GetSalesDetail(db))
 	e.POST("/sales", SalesHandler.CreateSales(db))
@@ -56,6 +58,7 @@ func main() {
 	e.DELETE("/sales/:id", SalesHandler.DeleteSales(db))
 	e.GET("/sales/:id/items", SalesHandler.GetSalesDetailItems(db))
 	e.POST("/sales/import", SalesHandler.ImportSales(db))
+	e.GET("/sales/export", SalesHandler.ExportSales(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 

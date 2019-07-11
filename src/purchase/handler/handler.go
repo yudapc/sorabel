@@ -102,3 +102,9 @@ func ImportPurchases(db *gorm.DB) echo.HandlerFunc {
 		return helpers.ToJson(context, http.StatusOK, "successfully", nil)
 	}
 }
+
+func ExportPurchases(db *gorm.DB) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		return helpers.ToJson(context, http.StatusOK, "successfully", nil)
+	}
+}
