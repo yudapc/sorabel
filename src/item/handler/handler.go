@@ -40,9 +40,6 @@ func CreateItem(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		var data model.Item
 
-		if errJSONValidate := helpers.SchemaValidation(context, "/schemas/item.json"); errJSONValidate != nil {
-			return helpers.ToJsonBadRequest(context, errJSONValidate.Error())
-		}
 		if errBind := context.Bind(&data); errBind != nil {
 			return helpers.ToJsonBadRequest(context, errBind.Error())
 		}
