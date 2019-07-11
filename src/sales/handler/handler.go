@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"encoding/csv"
 	"net/http"
+	"os"
 	"sorabel/helpers"
 	"sorabel/src/sales/model"
 	"strconv"
@@ -109,6 +111,40 @@ func ImportSales(db *gorm.DB) echo.HandlerFunc {
 
 func ExportSales(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		return helpers.ToJson(context, http.StatusOK, "successfully", nil)
+		fileName := "sales.csv"
+		uploadPath := helpers.ProjectDirectory() + "/public/"
+		fullPath := uploadPath + fileName
+
+		os.Remove(fullPath)
+		file, _ := os.Create(fullPath)
+		defer file.Close()
+		writer := csv.NewWriter(file)
+
+		data := [][]string{}
+		data = append(data, []string{"Waktu", "SKU", "Nama Barang", "Jumlah Keluar", "Harga Jual", "Total", "Catatan"})
+		sales, _ := model.GetSales(db)
+
+		for _, sale := range sales {
+			salesDetails, _ := model.GetSalesDetailItems(db, sale.ID)
+			for _, salesDetail := range salesDetails {
+				qty := strconv.Itoa(salesDetail.Qty)
+				sellingPrice := helpers.FormatRupiah(float64(salesDetail.SellingPrice))
+				total := helpers.FormatRupiah(float64(salesDetail.Total))
+				data = append(data, []string{
+					sale.DateTime,
+					salesDetail.Sku,
+					salesDetail.Name,
+					qty,
+					sellingPrice,
+					total,
+					salesDetail.Note,
+				})
+			}
+		}
+
+		writer.WriteAll(data)
+		defer writer.Flush()
+
+		return context.Attachment(fullPath, fileName)
 	}
 }
