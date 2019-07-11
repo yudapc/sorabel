@@ -1,13 +1,15 @@
 # sorabel
 
-This project for Toko Ijah.
+This project for solution Toko Ijah.
+
+Borad this project https://trello.com/b/DLofC4BT/sorabel
 
 ### Requirements:
 
 - Go version go1.12.6 darwin/amd64
 - Glide
 - sqlite
-- PORT 8000
+- This app run on PORT 8000
 
 ### How to run in development
 
@@ -48,6 +50,13 @@ Please checkout this project at `https://github.com/yudapc/sorabel`. And make su
 #### Run binary the sorabel app:
 
      `./sorabel-osx`
+
+---
+### POSTMAN COLLECTION
+
+You can import file collections to postman for testing each endpoint with sample payload:
+
+https://github.com/yudapc/sorabel/blob/master/Sorabel.postman_collection.json
 
 ---
 
