@@ -1,0 +1,715 @@
+{
+	"info": {
+		"_postman_id": "68109ce1-744f-4d7b-ac65-8edb126f366e",
+		"name": "Sorabel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "/items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/items?page=1&limit=50&orderBy=id&sortBy=asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "orderBy",
+									"value": "id"
+								},
+								{
+									"key": "sortBy",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/items/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"sku\": \"123123\",\n\t\"name\": \"Airpods 1\",\n\t\"stock\": 10,\n\t\"purchase_price\": 5000,\n\t\"selling_price\": 25000\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"sku\": \"SKU001\",\n\t\"name\": \"Macbook Pro 2019 Touch\",\n\t\"stock\": 11,\n\t\"purchase_price\": 25000000,\n\t\"selling_price\": 27000000\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/items/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/items/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items/import",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yudaprabucogati/Workspace/go-workspace/src/sorabel/data/items.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/items/import",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items",
+								"import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/items/export",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yudaprabucogati/Downloads/Toko Ijah - Catatan Jumlah Barang.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/items/export",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"items",
+								"export"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "purchase",
+			"item": [
+				{
+					"name": "/purchases",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/purchases?page=1&limit=2&orderBy=id&sortBy=desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "id"
+								},
+								{
+									"key": "sortBy",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchase/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/purchases/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchases",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"date_time\": \"1562730801000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/10\",\n\t\"purchase_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791015-LL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"item_received\": 5,\n\t\t\t\"note\": \"\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791077-MM-BWH\",\n\t\t\t\"qty\": 3,\n\t\t\t\"item_received\": 2,\n\t\t\t\"note\": \"kurang 1\"\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/purchases",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchase/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"date_time\": \"1562733301000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/100\",\n\t\"purchase_details\": [\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU001\",\n            \"name\": \"Jeruk Manis\",\n            \"qty\": 5,\n            \"item_received\": 5,\n            \"purchase_price\": 3000,\n            \"total\": 15000,\n            \"note\": \"\"\n        },\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU002\",\n            \"name\": \"Es Krim\",\n            \"qty\": 3,\n            \"item_received\": 2,\n            \"purchase_price\": 5000,\n            \"total\": 10000,\n            \"note\": \"kurang 1\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/purchases/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchase/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/purchases/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchase/:id/items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/purchases/1/items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases",
+								"1",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchases/import",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/yudaprabucogati/Workspace/go-workspace/src/sorabel/data/purchases.csv",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/purchases/import",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases",
+								"import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/purchases/export",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/purchases?page=1&limit=2&orderBy=id&sortBy=desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"purchases"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "id"
+								},
+								{
+									"key": "sortBy",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sales",
+			"item": [
+				{
+					"name": "/sales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales?page=1&limit=2&orderBy=id&sortBy=desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "id"
+								},
+								{
+									"key": "sortBy",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"date_time\": \"1562730801222\",\n\t\"invoice_number\": \"INV/0001/BHN/2017/07/10\",\n\t\"sales_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791091-XL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"note\": \"lima\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00864612-LL-NAV\",\n\t\t\t\"qty\": 3,\n\t\t\t\"note\": \"enam\"\n\t\t}\n\t]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/sales",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"date_time\": \"1562733301000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/100\",\n\t\"purchase_details\": [\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU001\",\n            \"name\": \"Jeruk Manis\",\n            \"qty\": 5,\n            \"item_received\": 5,\n            \"purchase_price\": 3000,\n            \"total\": 15000,\n            \"note\": \"\"\n        },\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU002\",\n            \"name\": \"Es Krim\",\n            \"qty\": 3,\n            \"item_received\": 2,\n            \"purchase_price\": 5000,\n            \"total\": 10000,\n            \"note\": \"kurang 1\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/sales/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/:id/items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales/1/items",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"1",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/import",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales/import",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/export",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/sales/export",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"sales",
+								"export"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "report",
+			"item": [
+				{
+					"name": "/report/item-value-report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/report/item-value-report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"report",
+								"item-value-report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/report/sales-report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/report/sales-report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"report",
+								"sales-report"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
