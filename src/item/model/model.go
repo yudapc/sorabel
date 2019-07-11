@@ -83,9 +83,18 @@ func InsertBulkItems(db *gorm.DB, lines [][]string) ([]Item, error) {
 
 	for index, line := range lines {
 		if index > 0 {
+			lenLine := len(line)
 			stock, _ := strconv.Atoi(line[2])
-			purchasePrice, _ := strconv.Atoi(line[3])
-			sellingPrice, _ := strconv.Atoi(line[4])
+			var purchasePrice int
+			var sellingPrice int
+			if (lenLine - 1) == 3 {
+				convertPurchasePrice, _ := strconv.Atoi(line[3])
+				purchasePrice = convertPurchasePrice
+			}
+			if (lenLine - 1) == 4 {
+				convertSellingPrice, _ := strconv.Atoi(line[4])
+				sellingPrice = convertSellingPrice
+			}
 			data := Item{
 				Sku:           line[0],
 				Name:          line[1],
