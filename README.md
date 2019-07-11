@@ -2,9 +2,8 @@
 
 This project for Toko Ijah.
 
-
-
 ### Requirements:
+
 - Go version go1.12.6 darwin/amd64
 - Glide
 - sqlite
@@ -33,19 +32,23 @@ Please checkout this project at `https://github.com/yudapc/sorabel`. And make su
      `glide install`
 
 ---
+
 #### Compile this project:
-* OSX:
 
-     `make sorabel-osx`
+- OSX:
 
-* Linux:
+  `make sorabel-osx`
 
-     `make sorabel-linux`
+- Linux:
+
+  `make sorabel-linux`
 
 ---
+
 #### Run binary the sorabel app:
 
      `./sorabel-osx`
+
 ---
 
 ### ROUTES
@@ -58,6 +61,8 @@ GET /items/:id
 POST /items
 PUT /items/:id
 DELETE /items/:id
+POST /items/import
+GET /items/export
 ```
 
 ---
@@ -71,6 +76,8 @@ GET /purchases/:id/items
 POST /purchases
 PUT /purchases/:id
 DELETE /purchases/:id
+POST /purchases/import
+GET /purchases/export
 ```
 
 ---
@@ -84,5 +91,6 @@ GET /sales/:id/items
 POST /sales
 PUT /sales/:id
 DELETE /sales/:id
+POST /sales/import
+GET /sales/export
 ```
-
