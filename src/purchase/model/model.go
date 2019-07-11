@@ -75,7 +75,7 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 			Qty:           purchaseDetail.Qty,
 			ItemReceived:  purchaseDetail.ItemReceived,
 			PurchasePrice: purchaseDetail.PurchasePrice,
-			Total:         purchaseDetail.Total,
+			Total:         purchaseDetail.Qty * purchaseDetail.PurchasePrice,
 			Note:          purchaseDetail.Note,
 			PurchaseID:    row.ID,
 		}

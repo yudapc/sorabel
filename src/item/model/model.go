@@ -7,13 +7,15 @@ import (
 )
 
 type Item struct {
-	ID        uint       `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"deleted_at"`
-	Sku       string     `json:"sku" validate:"required" gorm:"type:varchar(100);unique_index"`
-	Name      string     `json:"name" validate:"required" gorm:"size:255"`
-	Stock     int        `json:"stock" validate:"required"`
+	ID            uint       `gorm:"primary_key" json:"id"`
+	CreatedAt     time.Time  `json:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at"`
+	DeletedAt     *time.Time `json:"deleted_at"`
+	Sku           string     `json:"sku" validate:"required" gorm:"type:varchar(100);unique_index"`
+	Name          string     `json:"name" validate:"required" gorm:"size:255"`
+	Stock         int        `json:"stock" validate:"required"`
+	PurchasePrice int        `json:"purchase_price" validate:"required"`
+	SellingPrice  int        `json:"selling_price" validate:"required"`
 }
 
 func GetItems(db *gorm.DB) ([]Item, error) {
