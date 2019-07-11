@@ -28,10 +28,10 @@ type SalesDetail struct {
 	Sku           string     `json:"sku"`
 	Name          string     `json:"name"`
 	Qty           int        `json:"qty"`
-	PurchasePrice int        `json:"purchase_price"`
-	SellingPrice  int        `json:"selling_price"`
-	Total         int        `json:"total"`
-	Profit        int        `json:"profit"`
+	PurchasePrice float64    `json:"purchase_price"`
+	SellingPrice  float64    `json:"selling_price"`
+	Total         float64    `json:"total"`
+	Profit        float64    `json:"profit"`
 	Note          string     `json:"note"`
 	SalesID       uint       `json:"sales_id"`
 }
@@ -88,8 +88,8 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 			Qty:           salesDetail.Qty,
 			SellingPrice:  salesDetail.SellingPrice,
 			PurchasePrice: item.PurchasePrice,
-			Total:         salesDetail.Qty * salesDetail.SellingPrice,
-			Profit:        (salesDetail.Qty * salesDetail.SellingPrice) - (salesDetail.Qty * item.PurchasePrice),
+			Total:         float64(salesDetail.Qty) * salesDetail.SellingPrice,
+			Profit:        (float64(salesDetail.Qty) * salesDetail.SellingPrice) - (float64(salesDetail.Qty) * item.PurchasePrice),
 			Note:          salesDetail.Note,
 			SalesID:       row.ID,
 		}

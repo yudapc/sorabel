@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"net/http"
 	"sorabel/helpers"
+	"sorabel/src/report/model"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
@@ -9,12 +11,14 @@ import (
 
 func ItemValueReport(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		return helpers.ToJson(context, 200, "item value report", nil)
+		data := model.GenerateItemValueReport(db)
+		return helpers.ToJson(context, http.StatusOK, "succesfully", data)
 	}
 }
 
 func SalesReport(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		return helpers.ToJson(context, 200, "sales report", nil)
+		data := model.GenerateSalesReport(db)
+		return helpers.ToJson(context, http.StatusOK, "succesfully", data)
 	}
 }

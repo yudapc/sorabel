@@ -29,8 +29,8 @@ type PurchaseDetail struct {
 	Name          string     `json:"name"`
 	Qty           int        `json:"qty"`
 	ItemReceived  int        `json:"item_received"`
-	PurchasePrice int        `json:"purchase_price"`
-	Total         int        `json:"total"`
+	PurchasePrice float64    `json:"purchase_price"`
+	Total         float64    `json:"total"`
 	Note          string     `json:"note"`
 	PurchaseID    uint       `json:"purchase_id"`
 }
@@ -92,7 +92,7 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 			Qty:           purchaseDetail.Qty,
 			ItemReceived:  purchaseDetail.ItemReceived,
 			PurchasePrice: purchaseDetail.PurchasePrice,
-			Total:         purchaseDetail.Qty * purchaseDetail.PurchasePrice,
+			Total:         float64(purchaseDetail.Qty) * purchaseDetail.PurchasePrice,
 			Note:          purchaseDetail.Note,
 			PurchaseID:    row.ID,
 		}

@@ -18,8 +18,8 @@ type Item struct {
 	Sku           string     `json:"sku" validate:"required" gorm:"type:varchar(100);unique_index"`
 	Name          string     `json:"name" validate:"required" gorm:"size:255"`
 	Stock         int        `json:"stock" validate:"required"`
-	PurchasePrice int        `json:"purchase_price" validate:"required"`
-	SellingPrice  int        `json:"selling_price" validate:"required"`
+	PurchasePrice float64    `json:"purchase_price" validate:"required"`
+	SellingPrice  float64    `json:"selling_price" validate:"required"`
 }
 
 func GetItems(db *gorm.DB, context echo.Context) ([]Item, error) {
@@ -89,14 +89,14 @@ func InsertBulkItems(db *gorm.DB, lines [][]string) ([]Item, error) {
 		if index > 0 {
 			lenLine := len(line)
 			stock, _ := strconv.Atoi(line[2])
-			var purchasePrice int
-			var sellingPrice int
+			var purchasePrice float64
+			var sellingPrice float64
 			if (lenLine - 1) == 3 {
-				convertPurchasePrice, _ := strconv.Atoi(line[3])
+				convertPurchasePrice, _ := strconv.ParseFloat(line[3], 64)
 				purchasePrice = convertPurchasePrice
 			}
 			if (lenLine - 1) == 4 {
-				convertSellingPrice, _ := strconv.Atoi(line[4])
+				convertSellingPrice, _ := strconv.ParseFloat(line[4], 64)
 				sellingPrice = convertSellingPrice
 			}
 			data := Item{
