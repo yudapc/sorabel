@@ -38,6 +38,12 @@ func GetPurchases(db *gorm.DB) ([]Purchase, error) {
 	if result.Error != nil {
 		return []Purchase{}, result.Error
 	}
+
+	for i, _ := range purchases {
+		purchaseDetails, _ := GetPurchaseDetailItems(db, purchases[i].ID)
+		purchases[i].PurchaseDetails = purchaseDetails
+	}
+
 	return purchases, nil
 }
 
