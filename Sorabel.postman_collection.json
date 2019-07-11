@@ -79,7 +79,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"sku\": \"123123\",\n\t\"name\": \"Airpods 1\",\n\t\"stock\": 10,\n\t\"purchase_price\": 5000,\n\t\"selling_price\": 25000\n}"
+							"raw": "{\n\t\"sku\": \"SKU001\",\n    \"name\": \"Macbook Pro 2019\",\n    \"stock\": 10,\n    \"purchase_price\": 27000000,\n    \"selling_price\": 29500000\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8000/items",
@@ -112,7 +112,7 @@
 							"raw": "{\n\t\"sku\": \"SKU001\",\n\t\"name\": \"Macbook Pro 2019 Touch\",\n\t\"stock\": 11,\n\t\"purchase_price\": 25000000,\n\t\"selling_price\": 27000000\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8000/items/1",
+							"raw": "http://localhost:8000/items/32",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -120,7 +120,7 @@
 							"port": "8000",
 							"path": [
 								"items",
-								"1"
+								"32"
 							]
 						}
 					},
