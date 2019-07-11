@@ -52,18 +52,51 @@ func CreateSales(db *gorm.DB) echo.HandlerFunc {
 
 func UpdateSales(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return libraries.ToJson(c, 200, "update /sales/:id", nil)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var data model.Sales
+		data.ID = uint(id)
+
+		if errBind := c.Bind(&data); errBind != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		}
+		if errValidate := c.Validate(&data); errValidate != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		}
+
+		_, err := model.EditSales(db, data)
+		if err == nil {
+			return libraries.ToJson(c, http.StatusOK, "data has been updated!", data)
+		} else {
+			return err
+		}
 	}
 }
 
 func DeleteSales(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return libraries.ToJson(c, 200, "deelete /sales/:id", nil)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		var data model.Sales
+		data.ID = uint(id)
+		dataItem, err := model.DeleteSales(db, data)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", libraries.H{
+			"id":             dataItem.ID,
+			"date_time":      dataItem.DateTime,
+			"invoice_number": dataItem.InvoiceNumber,
+		})
 	}
 }
 
 func GetSalesDetailItems(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return libraries.ToJson(c, 200, "/sales/:id/items", nil)
+		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+		dataID := uint(id)
+		data, err := model.GetSalesDetailItems(db, dataID)
+		if err != nil {
+			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+		}
+		return libraries.ToJson(c, http.StatusOK, "successfully", data)
 	}
 }

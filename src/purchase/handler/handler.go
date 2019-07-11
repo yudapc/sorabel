@@ -88,8 +88,8 @@ func DeletePurchase(db *gorm.DB) echo.HandlerFunc {
 func GetPurchaseDetailItems(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-		purchaseID := uint(id)
-		data, err := model.GetPurchaseDetailItems(db, purchaseID)
+		dataID := uint(id)
+		data, err := model.GetPurchaseDetailItems(db, dataID)
 		if err != nil {
 			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
 		}

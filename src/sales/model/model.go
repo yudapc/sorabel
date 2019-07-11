@@ -13,7 +13,7 @@ type Sales struct {
 	UpdatedAt     time.Time     `json:"updated_at"`
 	DeletedAt     *time.Time    `json:"deleted_at"`
 	DateTime      string        `json:"date_time" validate:"required"`
-	ReceiptNumber string        `json:"receipt_number" validate:"required"`
+	InvoiceNumber string        `json:"invoice_number" validate:"required"`
 	SalesDetails  []SalesDetail `gorm:"foreignkey:SalesRefer" json:"sales_details"`
 }
 
@@ -99,6 +99,30 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 	salesItems, _ := GetSalesDetailItems(db, sales.ID)
 	dataSales.SalesDetails = salesItems
 
+	return dataSales, nil
+}
+
+func EditSales(db *gorm.DB, sales Sales) (Sales, error) {
+	_, errorExist := GetSalesDetail(db, sales)
+	if errorExist != nil {
+		return Sales{}, errorExist
+	}
+	result := db.Save(&sales)
+	if result.Error != nil {
+		return Sales{}, result.Error
+	}
+	return sales, nil
+}
+
+func DeleteSales(db *gorm.DB, sales Sales) (Sales, error) {
+	dataSales, errorExist := GetSalesDetail(db, sales)
+	if errorExist != nil {
+		return Sales{}, errorExist
+	}
+	result := db.Delete(&sales)
+	if result.Error != nil {
+		return Sales{}, result.Error
+	}
 	return dataSales, nil
 }
 
