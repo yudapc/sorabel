@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"io"
+	"encoding/csv"
 	"net/http"
-	"os"
 	"sorabel/helpers"
 	"sorabel/src/item/model"
 	"strconv"
@@ -95,6 +94,15 @@ func DeleteItem(db *gorm.DB) echo.HandlerFunc {
 func ImportItems(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		file, err := context.FormFile("file")
+		var errorFileType int = 0
+		for _, filetype := range file.Header["Content-Type"] {
+			if filetype != "text/csv" {
+				errorFileType++
+			}
+		}
+		if errorFileType > 0 {
+			return helpers.ToJsonBadRequest(context, "Please check your format file, the file must csv")
+		}
 		if err != nil {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
@@ -102,21 +110,17 @@ func ImportItems(db *gorm.DB) echo.HandlerFunc {
 		if errOpenFile != nil {
 			return helpers.ToJsonBadRequest(context, errOpenFile.Error())
 		}
-		defer src.Close()
 
-		// Destination
-		projectDirectory := helpers.ProjectDirectory()
-		dst, errDestination := os.Create(projectDirectory + "/uploaded/" + file.Filename)
-		if errDestination != nil {
-			return helpers.ToJsonBadRequest(context, errDestination.Error())
-		}
-		defer dst.Close()
-
-		// Copy
-		if _, err = io.Copy(dst, src); err != nil {
+		lines, err := csv.NewReader(src).ReadAll()
+		if err != nil {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
 
-		return helpers.ToJson(context, http.StatusOK, "horee", nil)
+		importedDataItems, err := model.InsertBulkItems(db, lines)
+		defer src.Close()
+		if err != nil {
+			return helpers.ToJsonBadRequest(context, err.Error())
+		}
+		return helpers.ToJson(context, http.StatusOK, "data success imported", importedDataItems)
 	}
 }

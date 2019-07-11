@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -65,4 +66,41 @@ func DeleteItem(db *gorm.DB, item Item) (Item, error) {
 		return Item{}, result.Error
 	}
 	return item, nil
+}
+
+func InsertBulkItems(db *gorm.DB, lines [][]string) ([]Item, error) {
+	var dataItems []Item
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return []Item{}, err
+	}
+
+	for index, line := range lines {
+		if index > 0 {
+			stock, _ := strconv.Atoi(line[2])
+			purchasePrice, _ := strconv.Atoi(line[3])
+			sellingPrice, _ := strconv.Atoi(line[4])
+			data := Item{
+				Sku:           line[0],
+				Name:          line[1],
+				Stock:         stock,
+				PurchasePrice: purchasePrice,
+				SellingPrice:  sellingPrice,
+			}
+			insertDetail := db.Create(&data)
+			if insertDetail.Error != nil {
+				tx.Rollback()
+				return []Item{}, insertDetail.Error
+			}
+			dataItems = append(dataItems, data)
+		}
+	}
+	tx.Commit()
+	return dataItems, nil
 }
