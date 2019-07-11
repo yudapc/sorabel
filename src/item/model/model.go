@@ -91,7 +91,7 @@ func InsertBulkItems(db *gorm.DB, lines [][]string) ([]Item, error) {
 			stock, _ := strconv.Atoi(line[2])
 			var purchasePrice float64
 			var sellingPrice float64
-			if (lenLine - 1) == 3 {
+			if (lenLine - 2) == 3 {
 				convertPurchasePrice, _ := strconv.ParseFloat(line[3], 64)
 				purchasePrice = convertPurchasePrice
 			}
