@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"io"
 	"net/http"
+	"os"
 	"sorabel/helpers"
 	"sorabel/src/item/model"
 	"strconv"
@@ -87,5 +89,34 @@ func DeleteItem(db *gorm.DB) echo.HandlerFunc {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
 		return helpers.ToJson(context, http.StatusOK, "data has been deleted!", dataItem)
+	}
+}
+
+func ImportItems(db *gorm.DB) echo.HandlerFunc {
+	return func(context echo.Context) error {
+		file, err := context.FormFile("file")
+		if err != nil {
+			return helpers.ToJsonBadRequest(context, err.Error())
+		}
+		src, errOpenFile := file.Open()
+		if errOpenFile != nil {
+			return helpers.ToJsonBadRequest(context, errOpenFile.Error())
+		}
+		defer src.Close()
+
+		// Destination
+		projectDirectory := helpers.ProjectDirectory()
+		dst, errDestination := os.Create(projectDirectory + "/uploaded/" + file.Filename)
+		if errDestination != nil {
+			return helpers.ToJsonBadRequest(context, errDestination.Error())
+		}
+		defer dst.Close()
+
+		// Copy
+		if _, err = io.Copy(dst, src); err != nil {
+			return helpers.ToJsonBadRequest(context, err.Error())
+		}
+
+		return helpers.ToJson(context, http.StatusOK, "horee", nil)
 	}
 }

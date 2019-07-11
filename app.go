@@ -41,6 +41,7 @@ func main() {
 	e.POST("/items", ItemHandler.CreateItem(db))
 	e.PUT("/items/:id", ItemHandler.UpdateItem(db))
 	e.DELETE("/items/:id", ItemHandler.DeleteItem(db))
+	e.POST("/items/import", ItemHandler.ImportItems(db))
 	e.GET("/purchases", PurchaseHandler.GetPurchases(db))
 	e.GET("/purchases/:id", PurchaseHandler.GetPurchaseDetail(db))
 	e.POST("/purchases", PurchaseHandler.CreatePurchase(db))
