@@ -91,8 +91,8 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 			Name:          item.Name,
 			Qty:           purchaseDetail.Qty,
 			ItemReceived:  purchaseDetail.ItemReceived,
-			PurchasePrice: purchaseDetail.PurchasePrice,
-			Total:         float64(purchaseDetail.Qty) * purchaseDetail.PurchasePrice,
+			PurchasePrice: item.PurchasePrice,
+			Total:         float64(purchaseDetail.Qty) * item.PurchasePrice,
 			Note:          purchaseDetail.Note,
 			PurchaseID:    row.ID,
 		}
@@ -107,7 +107,11 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 
 	tx.Commit()
 
-	return purchase, nil
+	dataPurchase, _ := GetPurchaseDetail(db, purchase)
+	purchaseItems, _ := GetPurchaseDetailItems(db, purchase.ID)
+	dataPurchase.PurchaseDetails = purchaseItems
+
+	return dataPurchase, nil
 }
 
 func EditPurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
