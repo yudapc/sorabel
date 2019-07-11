@@ -1,6 +1,7 @@
 package model
 
 import (
+	ItemModel "sorabel/src/item/model"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -69,9 +70,15 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 	}
 
 	for _, purchaseDetail := range purchase.PurchaseDetails {
-		item := PurchaseDetail{
+		var item ItemModel.Item
+		search := db.Where("sku = ?", purchaseDetail.Sku).First(&item)
+		if search.Error != nil {
+			tx.Rollback()
+			return Purchase{}, search.Error
+		}
+		data := PurchaseDetail{
 			Sku:           purchaseDetail.Sku,
-			Name:          purchaseDetail.Name,
+			Name:          item.Name,
 			Qty:           purchaseDetail.Qty,
 			ItemReceived:  purchaseDetail.ItemReceived,
 			PurchasePrice: purchaseDetail.PurchasePrice,
@@ -79,7 +86,9 @@ func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 			Note:          purchaseDetail.Note,
 			PurchaseID:    row.ID,
 		}
-		insertDetail := db.Create(&item)
+		insertDetail := db.Create(&data)
+		item.Stock = item.Stock + purchaseDetail.ItemReceived
+		db.Save(&item)
 		if insertDetail.Error != nil {
 			tx.Rollback()
 			return Purchase{}, insertDetail.Error

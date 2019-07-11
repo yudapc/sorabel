@@ -72,7 +72,12 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 
 	for _, salesDetail := range sales.SalesDetails {
 		var item ItemModel.Item
-		db.Where("sku = ?", salesDetail.Sku).First(&item)
+		search := db.Where("sku = ?", salesDetail.Sku).First(&item)
+		if search.Error != nil {
+			tx.Rollback()
+			return Sales{}, search.Error
+		}
+
 		salesDetailItem := SalesDetail{
 			Sku:           salesDetail.Sku,
 			Name:          item.Name,
