@@ -108,7 +108,7 @@ func ImportPurchases(db *gorm.DB) echo.HandlerFunc {
 func ExportPurchases(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
 		fileName := "purchase.csv"
-		uploadPath := helpers.ProjectDirectory() + "/uploaded/"
+		uploadPath := helpers.ProjectDirectory() + "/public/"
 		fullPath := uploadPath + fileName
 
 		os.Remove(fullPath)
