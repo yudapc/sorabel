@@ -81,7 +81,7 @@ func DeleteSales(db *gorm.DB) echo.HandlerFunc {
 		if err != nil {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
-		return helpers.ToJson(context, http.StatusOK, "data has been deleted!", helpers.H{
+		return helpers.ToJson(context, http.StatusOK, "data has been deleted!", helpers.HashObject{
 			"id":             dataItem.ID,
 			"date_time":      dataItem.DateTime,
 			"invoice_number": dataItem.InvoiceNumber,
