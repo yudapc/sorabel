@@ -8,6 +8,7 @@ This project for Toko Ijah.
 - Go version go1.12.6 darwin/amd64
 - Glide
 - sqlite
+- PORT 8000
 
 ### How to run in development
 
