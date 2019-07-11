@@ -6,6 +6,7 @@ import (
 	ItemModel "sorabel/src/item/model"
 	PurchaseHandler "sorabel/src/purchase/handler"
 	PurchaseModel "sorabel/src/purchase/model"
+	ReportHandler "sorabel/src/report/handler"
 	SalesHandler "sorabel/src/sales/handler"
 	SalesModel "sorabel/src/sales/model"
 
@@ -59,6 +60,8 @@ func main() {
 	e.GET("/sales/:id/items", SalesHandler.GetSalesDetailItems(db))
 	e.POST("/sales/import", SalesHandler.ImportSales(db))
 	e.GET("/sales/export", SalesHandler.ExportSales(db))
+	e.GET("/report/item-value-report", ReportHandler.ItemValueReport(db))
+	e.GET("/report/sales-report", ReportHandler.SalesReport(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
