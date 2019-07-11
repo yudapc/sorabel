@@ -48,12 +48,14 @@ func main() {
 	e.PUT("/purchases/:id", PurchaseHandler.UpdatePurchase(db))
 	e.DELETE("/purchases/:id", PurchaseHandler.DeletePurchase(db))
 	e.GET("/purchases/:id/items", PurchaseHandler.GetPurchaseDetailItems(db))
+	e.POST("/purchases/import", PurchaseHandler.ImportPurchases(db))
 	e.GET("/sales", SalesHandler.GetSales(db))
 	e.GET("/sales/:id", SalesHandler.GetSalesDetail(db))
 	e.POST("/sales", SalesHandler.CreateSales(db))
 	e.PUT("/sales/:id", SalesHandler.UpdateSales(db))
 	e.DELETE("/sales/:id", SalesHandler.DeleteSales(db))
 	e.GET("/sales/:id/items", SalesHandler.GetSalesDetailItems(db))
+	e.POST("/sales/import", SalesHandler.ImportSales(db))
 	e.Logger.Fatal(e.Start(":8000"))
 }
 
