@@ -14,7 +14,7 @@ import (
 
 func GetPurchases(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		data, err := model.GetPurchases(db)
+		data, err := model.GetPurchases(db, context)
 		if err != nil {
 			return helpers.ToJsonBadRequest(context, err.Error())
 		}
@@ -118,7 +118,7 @@ func ExportPurchases(db *gorm.DB) echo.HandlerFunc {
 
 		data := [][]string{}
 		data = append(data, []string{"Waktu", "SKU", "Nama Barang", "Jumlah Pemesanan", "Jumlah Diterima", "Harga Beli", "Total", "Nomor Kwitansi", "Catatan"})
-		purchases, _ := model.GetPurchases(db)
+		purchases, _ := model.GetPurchases(db, context)
 
 		for _, purchase := range purchases {
 			purchaseDetails, _ := model.GetPurchaseDetailItems(db, purchase.ID)

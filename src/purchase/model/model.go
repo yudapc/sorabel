@@ -1,8 +1,11 @@
 package model
 
 import (
+	"sorabel/helpers"
 	ItemModel "sorabel/src/item/model"
 	"time"
+
+	"github.com/labstack/echo"
 
 	"github.com/jinzhu/gorm"
 )
@@ -32,9 +35,10 @@ type PurchaseDetail struct {
 	PurchaseID    uint       `json:"purchase_id"`
 }
 
-func GetPurchases(db *gorm.DB) ([]Purchase, error) {
+func GetPurchases(db *gorm.DB, context echo.Context) ([]Purchase, error) {
+	_, limit, offset, order := helpers.QueryString(context)
 	var purchases []Purchase
-	result := db.Find(&purchases)
+	result := db.Limit(limit).Offset(offset).Order(order, true).Find(&purchases)
 	if result.Error != nil {
 		return []Purchase{}, result.Error
 	}

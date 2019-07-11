@@ -15,7 +15,7 @@ import (
 
 func GetItems(db *gorm.DB) echo.HandlerFunc {
 	return func(context echo.Context) error {
-		data, err := model.GetItems(db)
+		data, err := model.GetItems(db, context)
 		if err != nil {
 			return helpers.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
@@ -139,7 +139,7 @@ func ExportItems(db *gorm.DB) echo.HandlerFunc {
 
 		data := [][]string{}
 		data = append(data, []string{"SKU", "Nama Item", "Jumlah Sekarang", "Harga Beli", "Harga Jual"})
-		items, _ := model.GetItems(db)
+		items, _ := model.GetItems(db, context)
 
 		for _, item := range items {
 			stock := strconv.Itoa(item.Stock)

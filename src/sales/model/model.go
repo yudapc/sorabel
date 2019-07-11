@@ -1,8 +1,11 @@
 package model
 
 import (
+	"sorabel/helpers"
 	ItemModel "sorabel/src/item/model"
 	"time"
+
+	"github.com/labstack/echo"
 
 	"github.com/jinzhu/gorm"
 )
@@ -33,9 +36,10 @@ type SalesDetail struct {
 	SalesID       uint       `json:"sales_id"`
 }
 
-func GetSales(db *gorm.DB) ([]Sales, error) {
+func GetSales(db *gorm.DB, context echo.Context) ([]Sales, error) {
 	var sales []Sales
-	result := db.Find(&sales)
+	_, limit, offset, order := helpers.QueryString(context)
+	result := db.Limit(limit).Offset(offset).Order(order, true).Find(&sales)
 	if result.Error != nil {
 		return []Sales{}, result.Error
 	}

@@ -1,8 +1,11 @@
 package model
 
 import (
+	"sorabel/helpers"
 	"strconv"
 	"time"
+
+	"github.com/labstack/echo"
 
 	"github.com/jinzhu/gorm"
 )
@@ -19,9 +22,10 @@ type Item struct {
 	SellingPrice  int        `json:"selling_price" validate:"required"`
 }
 
-func GetItems(db *gorm.DB) ([]Item, error) {
+func GetItems(db *gorm.DB, context echo.Context) ([]Item, error) {
 	var items []Item
-	result := db.Find(&items)
+	_, limit, offset, order := helpers.QueryString(context)
+	result := db.Limit(limit).Offset(offset).Order(order, true).Find(&items)
 	if result.Error != nil {
 		return []Item{}, result.Error
 	}
