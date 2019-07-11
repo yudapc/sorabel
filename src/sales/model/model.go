@@ -80,12 +80,14 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 			SellingPrice:  salesDetail.SellingPrice,
 			PurchasePrice: item.PurchasePrice,
 			Total:         salesDetail.Qty * salesDetail.SellingPrice,
-			Profit:        salesDetail.Qty*salesDetail.SellingPrice - salesDetail.Qty*item.PurchasePrice,
+			Profit:        (salesDetail.Qty * salesDetail.SellingPrice) - (salesDetail.Qty * item.PurchasePrice),
 			Note:          salesDetail.Note,
 			SalesID:       row.ID,
 		}
 		insertDetail := db.Create(&salesDetailItem)
-		if insertDetail.Error != nil {
+		item.Stock = item.Stock - salesDetail.Qty
+		updateItem := db.Save(&item)
+		if insertDetail.Error != nil || updateItem.Error != nil {
 			tx.Rollback()
 			return Sales{}, insertDetail.Error
 		}
@@ -93,7 +95,11 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 
 	tx.Commit()
 
-	return sales, nil
+	dataSales, _ := GetSalesDetail(db, sales)
+	salesItems, _ := GetSalesDetailItems(db, sales.ID)
+	dataSales.SalesDetails = salesItems
+
+	return dataSales, nil
 }
 
 func GetSalesDetailItems(db *gorm.DB, id uint) ([]SalesDetail, error) {
