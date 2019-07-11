@@ -16,13 +16,16 @@ type SalesReport struct {
 	TotalQty      int     `json:"total_qty"`
 	SellingPrice  float64 `json:"selling_price"`
 	PurchasePrice float64 `json:"purchase_price"`
-	Profit        float64 `json:"profit"`
+	TotalProfit   float64 `json:"total_profit"`
 }
 
 func GenerateItemValueReport(db *gorm.DB) []ItemValueReport {
 	var itemValues []ItemValueReport
 	sql := `
-		SELECT pd.sku AS sku, pd.name As name, SUM(pd.qty) AS total_qty 
+		SELECT 
+			pd.sku AS sku, 
+			pd.name As name, 
+			SUM(pd.qty) AS total_qty 
 		FROM purchase_details pd 
 		LEFT JOIN purchases as p ON p.id = pd.purchase_id GROUP BY pd.sku
 	`
@@ -33,7 +36,13 @@ func GenerateItemValueReport(db *gorm.DB) []ItemValueReport {
 func GenerateSalesReport(db *gorm.DB) []SalesReport {
 	var salesReports []SalesReport
 	sql := `
-	SELECT sd.sku AS sku, sd.name AS name, SUM(sd.qty) AS total_qty, sd.selling_price AS selling_price, i.purchase_price AS purchase_price, (SUM(sd.qty) * sd.selling_price) - (SUM(sd.qty) * i.purchase_price) AS total_profit 
+	SELECT 
+		sd.sku AS sku, 
+		sd.name AS name, 
+		SUM(sd.qty) AS total_qty, 
+		sd.selling_price AS selling_price, 
+		i.purchase_price AS purchase_price, 
+		SUM(sd.profit) AS total_profit 
 	FROM sales_details sd
 	LEFT JOIN items AS i ON i.sku = sd.sku
 	LEFT JOIN sales AS s ON s.id = sd.sales_id

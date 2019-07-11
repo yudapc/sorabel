@@ -82,14 +82,17 @@ func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
 			return Sales{}, search.Error
 		}
 
+		total := float64(salesDetail.Qty) * item.SellingPrice
+		profit := total - (float64(salesDetail.Qty) * item.PurchasePrice)
+
 		salesDetailItem := SalesDetail{
 			Sku:           salesDetail.Sku,
 			Name:          item.Name,
 			Qty:           salesDetail.Qty,
-			SellingPrice:  salesDetail.SellingPrice,
+			SellingPrice:  item.SellingPrice,
 			PurchasePrice: item.PurchasePrice,
-			Total:         float64(salesDetail.Qty) * salesDetail.SellingPrice,
-			Profit:        (float64(salesDetail.Qty) * salesDetail.SellingPrice) - (float64(salesDetail.Qty) * item.PurchasePrice),
+			Total:         total,
+			Profit:        profit,
 			Note:          salesDetail.Note,
 			SalesID:       row.ID,
 		}
