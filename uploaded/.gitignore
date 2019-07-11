@@ -1,2 +1,7 @@
 *.py
 *.go
+*.csv
+*.jpg
+*.png
+*.txt
+*.php
