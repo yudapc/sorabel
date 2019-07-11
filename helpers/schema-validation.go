@@ -5,9 +5,9 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-func SchemaValidation(c echo.Context, filePath string) error {
+func SchemaValidation(context echo.Context, filePath string) error {
 	schemaLoader := gojsonschema.NewReferenceLoader(GetFile(filePath))
-	document := gojsonschema.NewGoLoader(c.Request().Body)
+	document := gojsonschema.NewGoLoader(context.Request().Body)
 	_, err := gojsonschema.Validate(schemaLoader, document)
 	if err != nil {
 		panic(err.Error())

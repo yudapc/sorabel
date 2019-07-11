@@ -11,61 +11,61 @@ import (
 )
 
 func GetPurchases(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(context echo.Context) error {
 		data, err := model.GetPurchases(db)
 		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "successfully", data)
+		return libraries.ToJson(context, http.StatusOK, "successfully", data)
 	}
 }
 
 func GetPurchaseDetail(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	return func(context echo.Context) error {
+		id, _ := strconv.ParseUint(context.Param("id"), 10, 64)
 		var purchase model.Purchase
 		purchase.ID = uint(id)
 		data, err := model.GetPurchaseDetail(db, purchase)
 		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "successfully", data)
+		return libraries.ToJson(context, http.StatusOK, "successfully", data)
 	}
 }
 
 func CreatePurchase(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(context echo.Context) error {
 		var data model.Purchase
-		if errBind := c.Bind(&data); errBind != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		if errBind := context.Bind(&data); errBind != nil {
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", errBind.Error())
 		}
-		if errValidate := c.Validate(&data); errValidate != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		if errValidate := context.Validate(&data); errValidate != nil {
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", errValidate.Error())
 		}
 		dataItem, err := model.CreatePurchase(db, data)
 		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusCreated, "data has been created!", dataItem)
+		return libraries.ToJson(context, http.StatusCreated, "data has been created!", dataItem)
 	}
 }
 
 func UpdatePurchase(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	return func(context echo.Context) error {
+		id, _ := strconv.ParseUint(context.Param("id"), 10, 64)
 		var data model.Purchase
 		data.ID = uint(id)
 
-		if errBind := c.Bind(&data); errBind != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", errBind.Error())
+		if errBind := context.Bind(&data); errBind != nil {
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", errBind.Error())
 		}
-		if errValidate := c.Validate(&data); errValidate != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", errValidate.Error())
+		if errValidate := context.Validate(&data); errValidate != nil {
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", errValidate.Error())
 		}
 
 		_, err := model.EditPurchase(db, data)
 		if err == nil {
-			return libraries.ToJson(c, http.StatusOK, "data has been updated!", data)
+			return libraries.ToJson(context, http.StatusOK, "data has been updated!", data)
 		} else {
 			return err
 		}
@@ -73,26 +73,26 @@ func UpdatePurchase(db *gorm.DB) echo.HandlerFunc {
 }
 
 func DeletePurchase(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	return func(context echo.Context) error {
+		id, _ := strconv.ParseUint(context.Param("id"), 10, 64)
 		var data model.Purchase
 		data.ID = uint(id)
 		dataItem, err := model.DeletePurchase(db, data)
 		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "data has been deleted!", dataItem)
+		return libraries.ToJson(context, http.StatusOK, "data has been deleted!", dataItem)
 	}
 }
 
 func GetPurchaseDetailItems(db *gorm.DB) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	return func(context echo.Context) error {
+		id, _ := strconv.ParseUint(context.Param("id"), 10, 64)
 		dataID := uint(id)
 		data, err := model.GetPurchaseDetailItems(db, dataID)
 		if err != nil {
-			return libraries.ToJson(c, http.StatusBadRequest, "failed", err.Error())
+			return libraries.ToJson(context, http.StatusBadRequest, "failed", err.Error())
 		}
-		return libraries.ToJson(c, http.StatusOK, "successfully", data)
+		return libraries.ToJson(context, http.StatusOK, "successfully", data)
 	}
 }

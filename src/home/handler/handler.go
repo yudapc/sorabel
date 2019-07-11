@@ -8,7 +8,7 @@ import (
 )
 
 func Home() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return libraries.ToJson(c, http.StatusOK, "successfully", "Hello Sorabel")
+	return func(context echo.Context) error {
+		return libraries.ToJson(context, http.StatusOK, "successfully", "Hello Sorabel")
 	}
 }
