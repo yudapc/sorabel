@@ -119,11 +119,53 @@ func EditPurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 	if errorExist != nil {
 		return Purchase{}, errorExist
 	}
-	result := db.Save(&purchase)
-	if result.Error != nil {
-		return Purchase{}, result.Error
+
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return Purchase{}, err
 	}
-	return purchase, nil
+	updateHeader := db.Save(&purchase)
+	if updateHeader.Error != nil {
+		tx.Rollback()
+		return Purchase{}, updateHeader.Error
+	}
+
+	for _, purchaseDetail := range purchase.PurchaseDetails {
+		var item ItemModel.Item
+		search := db.Where("sku = ?", purchaseDetail.Sku).First(&item)
+		if search.Error != nil {
+			tx.Rollback()
+			return Purchase{}, search.Error
+		}
+		data := PurchaseDetail{
+			ID:            purchaseDetail.ID,
+			Sku:           purchaseDetail.Sku,
+			Name:          purchaseDetail.Name,
+			Qty:           purchaseDetail.Qty,
+			ItemReceived:  purchaseDetail.ItemReceived,
+			PurchasePrice: purchaseDetail.PurchasePrice,
+			Total:         purchaseDetail.Total,
+			Note:          purchaseDetail.Note,
+			PurchaseID:    purchase.ID,
+		}
+		insertDetail := db.Save(&data)
+		if insertDetail.Error != nil {
+			tx.Rollback()
+			return Purchase{}, insertDetail.Error
+		}
+	}
+
+	tx.Commit()
+
+	data, _ := GetPurchaseDetail(db, purchase)
+
+	return data, nil
 }
 
 func DeletePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
