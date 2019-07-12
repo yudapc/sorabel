@@ -2,7 +2,7 @@
 
 This project for solution Toko Ijah.
 
-Borad this project https://trello.com/b/DLofC4BT/sorabel
+Board this project https://trello.com/b/DLofC4BT/sorabel
 
 ### Requirements:
 
@@ -13,12 +13,16 @@ Borad this project https://trello.com/b/DLofC4BT/sorabel
 
 ### How to run in development
 
-#### Run:
+#### Checkout source code
 
 Please checkout this project at `https://github.com/yudapc/sorabel`. And make sure you have been installed glide on your local machine.
 
-Install dependencies:
-`glide install`
+#### Install dependencies:
+
+     `glide install`
+
+
+#### Run:
 
 Run the app:
 `go run app.go`
@@ -29,9 +33,6 @@ Run the app:
 
 Please checkout this project at `https://github.com/yudapc/sorabel`. And make sure you have been installed glide on your local machine.
 
-#### Install dependencies:
-
-     `glide install`
 
 ---
 
