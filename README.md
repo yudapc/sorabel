@@ -26,23 +26,23 @@ Board this project https://trello.com/b/DLofC4BT/sorabel
 
 ### Added permission execute:
 
-OSX: `chmod +x start-osx.sh`
-Linux: `chmod +x start-linux.sh`
+- OSX: `chmod +x start-osx.sh`
+- Linux: `chmod +x start-linux.sh`
 
 ### Run with script:
 
-OSX: `./start-osx.sh`
-Linux: `./start-linux.sh`
+- OSX: `./start-osx.sh`
+- Linux: `./start-linux.sh`
 
 ### Compile this project:
 
-OSX: `make sorabel-osx`
-Linux: `make sorabel-linux`
+- OSX: `make sorabel-osx`
+- Linux: `make sorabel-linux`
 
 #### Run binary the sorabel app:
 
-OSX: `./sorabel-osx`
-Linux: `./sorabel-linux`
+- OSX: `./sorabel-osx`
+- Linux: `./sorabel-linux`
 
 ### POSTMAN COLLECTION
 
