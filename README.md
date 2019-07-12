@@ -21,7 +21,6 @@ Please checkout this project at `https://github.com/yudapc/sorabel`. And make su
 
      `glide install`
 
-
 #### Run:
 
 Run the app:
@@ -35,15 +34,21 @@ Run the app:
 
 ---
 
+#### OSX Run with script:
 
-#### Run with script:
-
-`./start.sh`
+`./start-osx.sh`
 
 ---
 
+#### Linux Run with script:
+
+`./start-linux.sh`
+
+---
 
 #### Run without script:
+
+---
 
 #### Compile this project:
 
@@ -59,9 +64,11 @@ Run the app:
 
 #### Run binary the sorabel app:
 
-     `./sorabel-osx`
+    OSX:  `./sorabel-osx`
+    Linux:  `./sorabel-linux`
 
 ---
+
 ### POSTMAN COLLECTION
 
 You can import file collections to postman for testing each endpoint with sample payload:
