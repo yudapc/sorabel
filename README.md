@@ -29,12 +29,21 @@ Run the app:
 
 ### How to run in production
 
-#### Run:
+#### Added permission execute:
 
-Please checkout this project at `https://github.com/yudapc/sorabel`. And make sure you have been installed glide on your local machine.
-
+`chmod +x start.sh`
 
 ---
+
+
+#### Run with script:
+
+`./start.sh`
+
+---
+
+
+#### Run without script:
 
 #### Compile this project:
 
