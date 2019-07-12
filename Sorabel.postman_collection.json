@@ -410,14 +410,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/purchases?page=1&limit=2&orderBy=id&sortBy=desc",
+							"raw": "http://localhost:8000/purchases/export?page=1&limit=2&orderBy=id&sortBy=desc",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"purchases"
+								"purchases",
+								"export"
 							],
 							"query": [
 								{
@@ -628,7 +629,7 @@
 				{
 					"name": "/sales/export",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8000/sales/export",
