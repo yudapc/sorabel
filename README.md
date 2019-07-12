@@ -11,63 +11,38 @@ Board this project https://trello.com/b/DLofC4BT/sorabel
 - sqlite
 - This app run on PORT 8000
 
-### How to run in development
 
-#### Checkout source code
+### Checkout source code
 
-Please checkout this project at `https://github.com/yudapc/sorabel`. And make sure you have been installed glide on your local machine.
+`git clone https://github.com/yudapc/sorabel.git`
 
-#### Install dependencies:
+### Install dependencies:
 
-     `glide install`
+`glide install`
 
-#### Run:
+### Run in development:
 
-Run the app:
 `go run app.go`
 
-### How to run in production
+### Added permission execute:
 
-#### Added permission execute:
+OSX: `chmod +x start-osx.sh`
+Linux: `chmod +x start-linux.sh`
 
-`chmod +x start.sh`
+### Run with script:
 
----
+OSX: `./start-osx.sh`
+Linux: `./start-linux.sh`
 
-#### OSX Run with script:
+### Compile this project:
 
-`./start-osx.sh`
-
----
-
-#### Linux Run with script:
-
-`./start-linux.sh`
-
----
-
-#### Run without script:
-
----
-
-#### Compile this project:
-
-- OSX:
-
-  `make sorabel-osx`
-
-- Linux:
-
-  `make sorabel-linux`
-
----
+OSX: `make sorabel-osx`
+Linux: `make sorabel-linux`
 
 #### Run binary the sorabel app:
 
-    OSX:  `./sorabel-osx`
-    Linux:  `./sorabel-linux`
-
----
+OSX: `./sorabel-osx`
+Linux: `./sorabel-linux`
 
 ### POSTMAN COLLECTION
 
