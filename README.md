@@ -34,15 +34,19 @@ Board this project https://trello.com/b/DLofC4BT/sorabel
 - OSX: `./start-osx.sh`
 - Linux: `./start-linux.sh`
 
+---
+
 ### Compile this project:
 
 - OSX: `make sorabel-osx`
 - Linux: `make sorabel-linux`
 
-#### Run binary the sorabel app:
+### Run binary the sorabel app:
 
 - OSX: `./sorabel-osx`
 - Linux: `./sorabel-linux`
+
+---
 
 ### POSTMAN COLLECTION
 
@@ -54,7 +58,7 @@ https://github.com/yudapc/sorabel/blob/master/Sorabel.postman_collection.json
 
 ### ROUTES
 
-#### List Endpoint Items / product:
+#### Item:
 
 ```
 GET /items
@@ -68,7 +72,7 @@ GET /items/export
 
 ---
 
-#### List Endpoint Purchase:
+#### Purchase:
 
 ```
 GET /purchases
@@ -83,7 +87,7 @@ GET /purchases/export
 
 ---
 
-#### List Endpoint Sales:
+#### Sales:
 
 ```
 GET /sales
