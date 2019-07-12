@@ -315,7 +315,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"date_time\": \"1562733301000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/100\",\n\t\"purchase_details\": [\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU001\",\n            \"name\": \"Jeruk Manis\",\n            \"qty\": 5,\n            \"item_received\": 5,\n            \"purchase_price\": 3000,\n            \"total\": 15000,\n            \"note\": \"\"\n        },\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU002\",\n            \"name\": \"Es Krim\",\n            \"qty\": 3,\n            \"item_received\": 2,\n            \"purchase_price\": 5000,\n            \"total\": 10000,\n            \"note\": \"kurang 1\"\n        }\n    ]\n}"
+							"raw": "{\n\t\"date_time\": \"2019-07-12T02:03:50.135823+07:00\",\n\t\"receipt_number\": \"0001/BHN/2017/07/10\",\n\t\"purchase_details\": [\n\t\t{\n\t\t\t\"id\": 1,\n\t\t\t\"sku\": \"SSI-D00791015-LL-BWH\",\n            \"name\": \"Zalekia Plain Casual Blouse (L,Broken White)\",\n            \"qty\": 5,\n            \"item_received\": 5,\n            \"purchase_price\": 350000,\n            \"total\": 1750000,\n            \"note\": \"edited 1\"\n\t\t},\n\t\t{\n\t\t\t\"id\": 2,\n\t\t\t\"sku\": \"SSI-D00791077-MM-BWH\",\n            \"name\": \"Zalekia Plain Casual Blouse (M,Broken White)\",\n            \"qty\": 3,\n            \"item_received\": 2,\n            \"purchase_price\": 140000,\n            \"total\": 420000,\n            \"note\": \"kurang 1 edited\"\n\t\t}\n\t]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8000/purchases/1",
@@ -547,7 +547,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"date_time\": \"1562733301000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/100\",\n\t\"purchase_details\": [\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU001\",\n            \"name\": \"Jeruk Manis\",\n            \"qty\": 5,\n            \"item_received\": 5,\n            \"purchase_price\": 3000,\n            \"total\": 15000,\n            \"note\": \"\"\n        },\n        {\n            \"ID\": 0,\n            \"sku\": \"SKU002\",\n            \"name\": \"Es Krim\",\n            \"qty\": 3,\n            \"item_received\": 2,\n            \"purchase_price\": 5000,\n            \"total\": 10000,\n            \"note\": \"kurang 1\"\n        }\n    ]\n}"
+							"raw": "{\n\t\"date_time\": \"2019-07-12T02:03:50.135823+07:00\",\n\t\"invoice_number\": \"INV/0001/BHN/2017/07/10\",\n\t\"sales_details\": [\n\t\t{\n\t\t\t\"id\": 1,\n\t\t\t\"sku\": \"SSI-D00791091-XL-BWH\",\n            \"name\": \"Zalekia Plain Casual Blouse (XL,Broken White)\",\n            \"qty\": 5,\n            \"purchase_price\": 100000,\n            \"selling_price\": 120000,\n            \"total\": 600000,\n            \"profit\": 100000,\n            \"note\": \"lima 2\"\n\t\t},\n\t\t{\n\t\t\t\"id\": 2,\n\t\t\t\"sku\": \"SSI-D00864612-LL-NAV\",\n            \"name\": \"Deklia Plain Casual Blouse (L,Navy)\",\n            \"qty\": 3,\n            \"purchase_price\": 900000,\n            \"selling_price\": 1080000,\n            \"total\": 3240000,\n            \"profit\": 540000,\n            \"note\": \"enam 2\"\n\t\t}\n\t]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8000/sales/1",
