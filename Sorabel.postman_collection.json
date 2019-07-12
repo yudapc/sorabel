@@ -285,7 +285,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"date_time\": \"1562730801000\",\n\t\"receipt_number\": \"0001/BHN/2017/07/10\",\n\t\"purchase_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791015-LL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"item_received\": 5,\n\t\t\t\"note\": \"\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791077-MM-BWH\",\n\t\t\t\"qty\": 3,\n\t\t\t\"item_received\": 2,\n\t\t\t\"note\": \"kurang 1\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"date_time\": \"2019-07-12T02:03:50.135823+07:00\",\n\t\"receipt_number\": \"0001/BHN/2017/07/10\",\n\t\"purchase_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791015-LL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"item_received\": 5,\n\t\t\t\"note\": \"\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791077-MM-BWH\",\n\t\t\t\"qty\": 3,\n\t\t\t\"item_received\": 2,\n\t\t\t\"note\": \"kurang 1\"\n\t\t}\n\t]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8000/purchases",
@@ -517,7 +517,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"date_time\": \"1562730801222\",\n\t\"invoice_number\": \"INV/0001/BHN/2017/07/10\",\n\t\"sales_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791091-XL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"note\": \"lima\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00864612-LL-NAV\",\n\t\t\t\"qty\": 3,\n\t\t\t\"note\": \"enam\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"date_time\": \"2019-07-12T02:03:50.135823+07:00\",\n\t\"invoice_number\": \"INV/0001/BHN/2017/07/10\",\n\t\"sales_details\": [\n\t\t{\n\t\t\t\"sku\": \"SSI-D00791091-XL-BWH\",\n\t\t\t\"qty\": 5,\n\t\t\t\"note\": \"lima\"\n\t\t},\n\t\t{\n\t\t\t\"sku\": \"SSI-D00864612-LL-NAV\",\n\t\t\t\"qty\": 3,\n\t\t\t\"note\": \"enam\"\n\t\t}\n\t]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8000/sales",

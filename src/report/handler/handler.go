@@ -26,9 +26,9 @@ func ItemValueReport(db *gorm.DB) echo.HandlerFunc {
 			totalValues = totalValues + value.PurchasePrice
 		}
 		header := helpers.HashObject{
-			"DateTime":   DateTime,
-			"totalSku":   totalSku,
-			"totalItems": totalItems,
+			"date":        DateTime,
+			"total_sku":   totalSku,
+			"total_items": totalItems,
 		}
 		response := helpers.HashObject{
 			"header": header,
@@ -54,11 +54,11 @@ func SalesReport(db *gorm.DB) echo.HandlerFunc {
 			totalItems = totalItems + value.TotalQty
 		}
 		header := helpers.HashObject{
-			"Date":              DateTime,
-			"totalOmzet":        totalOmzet,
-			"totalProfit":       totalProfit,
-			"totalItems":        totalItems,
-			"totalTransactions": totalTransactions,
+			"date":               DateTime,
+			"total_omzet":        totalOmzet,
+			"total_profit":       totalProfit,
+			"total_items":        totalItems,
+			"total_transactions": totalTransactions,
 		}
 
 		response := helpers.HashObject{
