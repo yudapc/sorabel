@@ -154,10 +154,10 @@ func EditSales(db *gorm.DB, sales Sales) (Sales, error) {
 			Note:          salesDetail.Note,
 			SalesID:       sales.ID,
 		}
-		insertDetail := db.Save(&salesDetailItem)
-		if insertDetail.Error != nil {
+		updateDetail := db.Save(&salesDetailItem)
+		if updateDetail.Error != nil {
 			tx.Rollback()
-			return Sales{}, insertDetail.Error
+			return Sales{}, updateDetail.Error
 		}
 	}
 
