@@ -125,11 +125,49 @@ func EditSales(db *gorm.DB, sales Sales) (Sales, error) {
 	if errorExist != nil {
 		return Sales{}, errorExist
 	}
-	result := db.Save(&sales)
-	if result.Error != nil {
-		return Sales{}, result.Error
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return Sales{}, err
 	}
-	return sales, nil
+	updateHeader := db.Save(&sales)
+	if updateHeader.Error != nil {
+		tx.Rollback()
+		return Sales{}, updateHeader.Error
+	}
+
+	for _, salesDetail := range sales.SalesDetails {
+		salesDetailItem := SalesDetail{
+			ID:            salesDetail.ID,
+			Sku:           salesDetail.Sku,
+			Name:          salesDetail.Name,
+			Qty:           salesDetail.Qty,
+			SellingPrice:  salesDetail.SellingPrice,
+			PurchasePrice: salesDetail.PurchasePrice,
+			Total:         salesDetail.Total,
+			Profit:        salesDetail.Profit,
+			Note:          salesDetail.Note,
+			SalesID:       sales.ID,
+		}
+		insertDetail := db.Save(&salesDetailItem)
+		if insertDetail.Error != nil {
+			tx.Rollback()
+			return Sales{}, insertDetail.Error
+		}
+	}
+
+	tx.Commit()
+
+	dataSales, _ := GetSalesDetail(db, sales)
+	salesItems, _ := GetSalesDetailItems(db, sales.ID)
+	dataSales.SalesDetails = salesItems
+
+	return dataSales, nil
 }
 
 func DeleteSales(db *gorm.DB, sales Sales) (Sales, error) {
