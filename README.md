@@ -11,6 +11,21 @@ Board this project https://trello.com/b/DLofC4BT/sorabel
 - sqlite
 - This app run on PORT 8000
 
+### Flow Application
+
+```
+request
+  |
+app.go --> routing
+  |
+handler
+  |
+model  --> Database
+  |
+handler and response 
+
+```
+
 
 ### Checkout source code
 
