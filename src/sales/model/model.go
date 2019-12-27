@@ -2,7 +2,6 @@ package model
 
 import (
 	"sorabel/helpers"
-	ItemModel "sorabel/src/item/model"
 	"time"
 
 	"github.com/labstack/echo"
@@ -33,29 +32,23 @@ type SalesDetail struct {
 	Total         float64    `json:"total"`
 	Profit        float64    `json:"profit"`
 	Note          string     `json:"note"`
-	SalesID       uint       `json:"sales_id"`
+	SalesRefer    uint       `json:"sales_refer"`
+	Sales         *Sales     `gorm:"foreignkey:SalesRefer" json:"sales"`
 }
 
 func GetSales(db *gorm.DB, context echo.Context) ([]Sales, error) {
-	var sales []Sales
 	_, limit, offset, order := helpers.QueryString(context)
-	result := db.Limit(limit).Offset(offset).Order(order, true).Find(&sales)
+	var sales []Sales
+	result := db.Limit(limit).Offset(offset).Order(order, true).Preload("SalesDetails").Find(&sales)
 	if result.Error != nil {
 		return []Sales{}, result.Error
-	}
-
-	for i, _ := range sales {
-		salesDetails, _ := GetSalesDetailItems(db, sales[i].ID)
-		sales[i].SalesDetails = salesDetails
 	}
 
 	return sales, nil
 }
 
 func GetSalesDetail(db *gorm.DB, sales Sales) (Sales, error) {
-	result := db.First(&sales)
-	salesDetails, _ := GetSalesDetailItems(db, sales.ID)
-	sales.SalesDetails = salesDetails
+	result := db.Preload("SalesDetails").Find(&sales)
 	if result.Error != nil {
 		return Sales{}, result.Error
 	}
@@ -63,60 +56,12 @@ func GetSalesDetail(db *gorm.DB, sales Sales) (Sales, error) {
 }
 
 func CreateSales(db *gorm.DB, sales Sales) (Sales, error) {
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err := tx.Error; err != nil {
-		return Sales{}, err
-	}
 	row := new(Sales)
 	result := db.Create(&sales).Scan(&row)
 	if result.Error != nil {
-		tx.Rollback()
 		return Sales{}, result.Error
 	}
-
-	for _, salesDetail := range sales.SalesDetails {
-		var item ItemModel.Item
-		search := db.Where("sku = ?", salesDetail.Sku).First(&item)
-		if search.Error != nil {
-			tx.Rollback()
-			return Sales{}, search.Error
-		}
-
-		total := float64(salesDetail.Qty) * item.SellingPrice
-		profit := total - (float64(salesDetail.Qty) * item.PurchasePrice)
-
-		salesDetailItem := SalesDetail{
-			Sku:           salesDetail.Sku,
-			Name:          item.Name,
-			Qty:           salesDetail.Qty,
-			SellingPrice:  item.SellingPrice,
-			PurchasePrice: item.PurchasePrice,
-			Total:         total,
-			Profit:        profit,
-			Note:          salesDetail.Note,
-			SalesID:       row.ID,
-		}
-		insertDetail := db.Create(&salesDetailItem)
-		item.Stock = item.Stock - salesDetail.Qty
-		updateItem := db.Save(&item)
-		if insertDetail.Error != nil || updateItem.Error != nil {
-			tx.Rollback()
-			return Sales{}, insertDetail.Error
-		}
-	}
-
-	tx.Commit()
-
 	dataSales, _ := GetSalesDetail(db, sales)
-	salesItems, _ := GetSalesDetailItems(db, sales.ID)
-	dataSales.SalesDetails = salesItems
-
 	return dataSales, nil
 }
 
@@ -125,47 +70,13 @@ func EditSales(db *gorm.DB, sales Sales) (Sales, error) {
 	if errorExist != nil {
 		return Sales{}, errorExist
 	}
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
 
-	if err := tx.Error; err != nil {
-		return Sales{}, err
-	}
 	updateHeader := db.Save(&sales)
 	if updateHeader.Error != nil {
-		tx.Rollback()
 		return Sales{}, updateHeader.Error
 	}
 
-	for _, salesDetail := range sales.SalesDetails {
-		salesDetailItem := SalesDetail{
-			ID:            salesDetail.ID,
-			Sku:           salesDetail.Sku,
-			Name:          salesDetail.Name,
-			Qty:           salesDetail.Qty,
-			SellingPrice:  salesDetail.SellingPrice,
-			PurchasePrice: salesDetail.PurchasePrice,
-			Total:         salesDetail.Total,
-			Profit:        salesDetail.Profit,
-			Note:          salesDetail.Note,
-			SalesID:       sales.ID,
-		}
-		updateDetail := db.Save(&salesDetailItem)
-		if updateDetail.Error != nil {
-			tx.Rollback()
-			return Sales{}, updateDetail.Error
-		}
-	}
-
-	tx.Commit()
-
 	dataSales, _ := GetSalesDetail(db, sales)
-	salesItems, _ := GetSalesDetailItems(db, sales.ID)
-	dataSales.SalesDetails = salesItems
 
 	return dataSales, nil
 }
@@ -184,7 +95,7 @@ func DeleteSales(db *gorm.DB, sales Sales) (Sales, error) {
 
 func GetSalesDetailItems(db *gorm.DB, id uint) ([]SalesDetail, error) {
 	salesDetails := []SalesDetail{}
-	result := db.Where("sales_id = ?", id).Find(&salesDetails)
+	result := db.Where("sales_refer = ?", id).Find(&salesDetails)
 	if result.Error != nil {
 		return []SalesDetail{}, result.Error
 	}

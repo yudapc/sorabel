@@ -32,29 +32,23 @@ type PurchaseDetail struct {
 	PurchasePrice float64    `json:"purchase_price"`
 	Total         float64    `json:"total"`
 	Note          string     `json:"note"`
-	PurchaseID    uint       `json:"purchase_id"`
+	PurchaseRefer uint       `json:"purchase_refer"`
+	Purchase      *Purchase  `gorm:"foreignkey:PurchaseRefer" json:"purchase"`
 }
 
 func GetPurchases(db *gorm.DB, context echo.Context) ([]Purchase, error) {
 	_, limit, offset, order := helpers.QueryString(context)
 	var purchases []Purchase
-	result := db.Limit(limit).Offset(offset).Order(order, true).Find(&purchases)
+	result := db.Limit(limit).Offset(offset).Order(order, true).Preload("PurchaseDetails").Find(&purchases)
 	if result.Error != nil {
 		return []Purchase{}, result.Error
-	}
-
-	for i, _ := range purchases {
-		purchaseDetails, _ := GetPurchaseDetailItems(db, purchases[i].ID)
-		purchases[i].PurchaseDetails = purchaseDetails
 	}
 
 	return purchases, nil
 }
 
 func GetPurchaseDetail(db *gorm.DB, purchase Purchase) (Purchase, error) {
-	result := db.First(&purchase)
-	purchaseDetails, _ := GetPurchaseDetailItems(db, purchase.ID)
-	purchase.PurchaseDetails = purchaseDetails
+	result := db.Preload("PurchaseDetails").Find(&purchase)
 	if result.Error != nil {
 		return Purchase{}, result.Error
 	}
@@ -62,55 +56,12 @@ func GetPurchaseDetail(db *gorm.DB, purchase Purchase) (Purchase, error) {
 }
 
 func CreatePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
-	tx := db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err := tx.Error; err != nil {
-		return Purchase{}, err
-	}
 	row := new(Purchase)
 	result := db.Create(&purchase).Scan(&row)
 	if result.Error != nil {
-		tx.Rollback()
 		return Purchase{}, result.Error
 	}
-
-	for _, purchaseDetail := range purchase.PurchaseDetails {
-		var item ItemModel.Item
-		search := db.Where("sku = ?", purchaseDetail.Sku).First(&item)
-		if search.Error != nil {
-			tx.Rollback()
-			return Purchase{}, search.Error
-		}
-		data := PurchaseDetail{
-			Sku:           purchaseDetail.Sku,
-			Name:          item.Name,
-			Qty:           purchaseDetail.Qty,
-			ItemReceived:  purchaseDetail.ItemReceived,
-			PurchasePrice: item.PurchasePrice,
-			Total:         float64(purchaseDetail.Qty) * item.PurchasePrice,
-			Note:          purchaseDetail.Note,
-			PurchaseID:    row.ID,
-		}
-		insertDetail := db.Create(&data)
-		item.Stock = item.Stock + purchaseDetail.ItemReceived
-		db.Save(&item)
-		if insertDetail.Error != nil {
-			tx.Rollback()
-			return Purchase{}, insertDetail.Error
-		}
-	}
-
-	tx.Commit()
-
 	dataPurchase, _ := GetPurchaseDetail(db, purchase)
-	purchaseItems, _ := GetPurchaseDetailItems(db, purchase.ID)
-	dataPurchase.PurchaseDetails = purchaseItems
-
 	return dataPurchase, nil
 }
 
@@ -152,7 +103,7 @@ func EditPurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 			PurchasePrice: purchaseDetail.PurchasePrice,
 			Total:         purchaseDetail.Total,
 			Note:          purchaseDetail.Note,
-			PurchaseID:    purchase.ID,
+			PurchaseRefer: purchase.ID,
 		}
 		updateDetail := db.Save(&data)
 		if updateDetail.Error != nil {
@@ -182,7 +133,7 @@ func DeletePurchase(db *gorm.DB, purchase Purchase) (Purchase, error) {
 
 func GetPurchaseDetailItems(db *gorm.DB, id uint) ([]PurchaseDetail, error) {
 	purchaseDetails := []PurchaseDetail{}
-	result := db.Where("purchase_id = ?", id).Find(&purchaseDetails)
+	result := db.Where("purchase_refer = ?", id).Find(&purchaseDetails)
 	if result.Error != nil {
 		return []PurchaseDetail{}, result.Error
 	}
